@@ -544,6 +544,10 @@ section {
   position: relative;
   display: block;
 }
+.swatch-square {
+  width: 86%;
+  margin: 0 auto;
+}
 .swatch-click {
   position: absolute;
   inset: 0;

@@ -480,7 +480,7 @@ export default function Home() {
               <div className="swatch-item reveal" key={sw.label}>
                 <button
                   type="button"
-                  className="swatch"
+                  className={`swatch${sw.shape === "square" ? " swatch-square" : ""}`}
                   style={{
                     background: sw.bg,
                     clipPath: sw.shape === "square" ? undefined : `url(#swatch-clip-${sw.shape})`,
