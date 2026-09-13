@@ -40,8 +40,8 @@ const MECH_VARIANTS = [
 const SWITCH_LIB = [
   { label: "Clicky", variant: 0 },
   { label: "Tactile", variant: 1 },
-  { label: "Creamy (Linear)", variant: 2 },
-  { label: "Thocky (Linear)", variant: 3 },
+  { label: "Creamy", variant: 2 },
+  { label: "Thocky", variant: 3 },
 ];
 const MASTER_VOLUME = 2.2;
 
@@ -671,22 +671,21 @@ export default function Home() {
 
           <div className="type-tester reveal">
             <span className="type-tester-label">Type to hear the switches</span>
-            <select
-              className="type-tester-select"
-              value={switchIdx}
-              onChange={(e) => {
-                const idx = Number(e.target.value);
-                setSwitchIdx(idx);
-                playMechClick(SWITCH_LIB[idx].variant);
-              }}
-              aria-label="Pick a switch type"
-            >
+            <div className="switch-pills" role="group" aria-label="Pick a switch type">
               {SWITCH_LIB.map((sw, i) => (
-                <option value={i} key={sw.label}>
+                <button
+                  type="button"
+                  key={sw.label}
+                  className={`switch-pill${i === switchIdx ? " active" : ""}`}
+                  onClick={() => {
+                    setSwitchIdx(i);
+                    playMechClick(sw.variant);
+                  }}
+                >
                   {sw.label}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
           <div className="kc-preview reveal">
@@ -731,7 +730,7 @@ export default function Home() {
               type="text"
               className="kc-input"
               value={kcText}
-              maxLength={10}
+              maxLength={5}
               placeholder="Type a name..."
               autoComplete="off"
               spellCheck="false"
