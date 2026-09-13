@@ -174,7 +174,7 @@ nav.links a:hover {
 }
 .hero-main {
   pointer-events: none;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .hero-main .btn,
 .hero-main .decor-shape {
@@ -307,7 +307,7 @@ nav.links a:hover {
 
 /* ---------- MARQUEE ---------- */
 .marquee-clip {
-  overflow-x: hidden;
+  overflow: hidden;
   width: 100%;
 }
 .marquee-strip {
