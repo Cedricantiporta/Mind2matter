@@ -1109,9 +1109,13 @@ section {
 .hours-row {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   font-size: 14px;
   padding: 7px 0;
   border-bottom: 1px dashed rgba(246, 239, 226, 0.18);
+}
+.hours-row span:first-child {
+  white-space: nowrap;
 }
 .hours-row:last-child {
   border-bottom: none;
@@ -1155,6 +1159,19 @@ section {
   }
   .swatch-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .service-card {
+    padding: 22px;
+  }
+  .contact-panel {
+    padding: 22px;
+    gap: 28px;
+  }
+  .hours-card {
+    padding: 18px;
+  }
+  .contact-item {
+    padding: 12px 14px;
   }
   .wrap {
     padding: 0 18px;
