@@ -28,12 +28,15 @@
 }
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
 }
 body {
   background: var(--page-bg);
   color: var(--ink);
   font-family: var(--font-jakarta), sans-serif;
   overflow-x: hidden;
+  width: 100%;
   position: relative;
 }
 .wrap {
