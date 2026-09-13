@@ -411,11 +411,9 @@ export default function Home() {
               <div className="f">
                 <span className="ico">
                   <svg viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M4 4h4v4H4zM10 4h4v4h-4zM16 4h4v4h-4zM4 10h4v4H4zM10 10h4v4h-4zM16 10h4v4h-4z"
-                      stroke="#8a6a00"
-                      strokeWidth="1.6"
-                    />
+                    <circle cx="8" cy="9" r="6.2" fill="var(--pastel-pink)" />
+                    <circle cx="16" cy="9" r="6.2" fill="var(--teal)" opacity="0.9" />
+                    <circle cx="12" cy="16.5" r="6.2" fill="var(--pastel-peach)" />
                   </svg>
                 </span>
                 Multi-color filaments
