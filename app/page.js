@@ -6,21 +6,7 @@ const FB_URL = "https://www.facebook.com/profile.php?id=61573794730980";
 const IG_URL = "https://instagram.com/mind2matterph";
 
 function LogoMark() {
-  return (
-    <svg viewBox="0 0 60 60" fill="none">
-      <circle cx="30" cy="32" r="9.5" fill="none" stroke="var(--ink)" strokeWidth="2.6" />
-      <circle cx="26.2" cy="31" r="1.9" fill="var(--ink)" />
-      <circle cx="33.8" cy="31" r="1.9" fill="var(--ink)" />
-      <path d="M25.5 35.5q4.5 4 9 0" stroke="var(--ink)" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-      <g stroke="var(--ink)" strokeWidth="2.6" strokeLinecap="round">
-        <line x1="30" y1="17" x2="30" y2="11" />
-        <line x1="21" y1="20" x2="16.5" y2="15.5" />
-        <line x1="39" y1="20" x2="43.5" y2="15.5" />
-        <line x1="17" y1="27" x2="10.5" y2="25" />
-        <line x1="43" y1="27" x2="49.5" y2="25" />
-      </g>
-    </svg>
-  );
+  return <img src="/logo.png" alt="Mind2Matter" className="logo-img" />;
 }
 
 function FacebookIcon() {
@@ -238,46 +224,14 @@ export default function Home() {
           </div>
 
           <div className="hero-art">
+            <div className="mascot-glow" />
             <div className="float-badge">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5z" fill="var(--ink)" />
               </svg>
             </div>
             <div className="mascot-wrap">
-              <svg viewBox="0 0 420 440" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="210" cy="392" rx="150" ry="18" fill="#19141022" />
-                <rect x="70" y="370" width="280" height="22" rx="8" fill="var(--ink)" />
-                <rect x="70" y="366" width="280" height="10" rx="5" fill="#2a221b" />
-                <g>
-                  <rect x="178" y="330" width="64" height="40" rx="6" fill="var(--orange-deep)" />
-                  <rect x="184" y="300" width="52" height="34" rx="6" fill="#9587dd" />
-                  <rect x="190" y="272" width="40" height="32" rx="6" fill="#b3a6e8" />
-                  <rect x="196" y="248" width="28" height="28" rx="6" fill="var(--orange)" />
-                </g>
-                <rect x="60" y="50" width="14" height="330" rx="6" fill="var(--ink)" />
-                <rect x="346" y="50" width="14" height="330" rx="6" fill="var(--ink)" />
-                <rect x="60" y="44" width="300" height="16" rx="8" fill="var(--ink)" />
-                <g>
-                  <rect x="150" y="150" width="120" height="60" rx="16" fill="var(--teal)" />
-                  <circle cx="180" cy="180" r="7" fill="var(--cream)" />
-                  <circle cx="212" cy="180" r="7" fill="var(--cream)" />
-                  <path d="M188 196 q22 12 44 0" stroke="var(--cream)" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <rect x="200" y="205" width="20" height="46" rx="6" fill="#0a6668" />
-                  <path d="M210 251 q0 24 0 24" stroke="var(--gold)" strokeWidth="6" strokeLinecap="round" />
-                </g>
-                <circle cx="150" cy="140" r="6" fill="var(--gold)" />
-                <g className="spool-decoration" transform="translate(40,60)">
-                  <circle cx="0" cy="0" r="34" fill="#ece6fb" stroke="var(--orange)" strokeWidth="6" />
-                  <circle cx="0" cy="0" r="10" fill="var(--orange-deep)" />
-                </g>
-                <g transform="translate(300,90) rotate(12)">
-                  <rect x="0" y="0" width="34" height="34" rx="8" fill="var(--gold)" />
-                  <circle cx="17" cy="-8" r="5" fill="none" stroke="var(--ink)" strokeWidth="3" />
-                </g>
-                <g transform="translate(20,220) rotate(-10)">
-                  <path d="M0 20 L18 0 L36 20 L18 40 Z" fill="var(--teal)" />
-                </g>
-              </svg>
+              <img src="/mascot.png" alt="Mind2Matter mascot" className="mascot-img" />
             </div>
           </div>
         </section>
