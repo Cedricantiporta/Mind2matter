@@ -310,6 +310,8 @@ nav.links a:hover {
   overflow: hidden;
   width: 100%;
   position: relative;
+  margin: 40px 0 -6px;
+  padding: 32px 0;
 }
 .marquee-strip {
   background: var(--pink-deep);
@@ -318,7 +320,7 @@ nav.links a:hover {
   overflow: hidden;
   transform: rotate(-1.4deg);
   width: 120%;
-  margin: 40px 0 -6px -10%;
+  margin: 0 0 0 -10%;
   position: relative;
   z-index: 2;
 }
@@ -326,8 +328,8 @@ nav.links a:hover {
 .marquee-clip::after {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 32px;
+  bottom: 32px;
   width: 56px;
   z-index: 3;
   pointer-events: none;
