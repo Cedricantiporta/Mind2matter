@@ -139,9 +139,6 @@ export default function Home() {
               <div className="brand-mark">
                 <LogoMark />
               </div>
-              <span>
-                Mind<span className="m">2</span>Matter
-              </span>
             </div>
             <nav className="links">
               <a href="#services">Services</a>
@@ -254,7 +251,6 @@ export default function Home() {
         <section id="services">
           <div className="sec-head reveal">
             <div>
-              <div className="sec-tag">What We Print</div>
               <h2>One studio, every kind of layer.</h2>
             </div>
             <p>From a single replacement part to a full run of gifts — if it can be modeled, we can print it in Caloocan.</p>
@@ -274,7 +270,6 @@ export default function Home() {
         <section id="process">
           <div className="process reveal">
             <div className="process-inner">
-              <div className="sec-tag">How It Works</div>
               <h2>Idea to object, four steps.</h2>
               <p className="desc">No modeling experience needed — tell us what you&apos;re picturing and we&apos;ll take it from there.</p>
               <div className="steps">
@@ -293,7 +288,6 @@ export default function Home() {
         <section id="colors">
           <div className="sec-head reveal">
             <div>
-              <div className="sec-tag">Filament Library</div>
               <h2>Pick a color, we&apos;ll load the spool.</h2>
             </div>
             <p>A running sample of finishes we keep in stock — more shades available on request.</p>
@@ -326,7 +320,6 @@ export default function Home() {
               </div>
             </div>
             <div className="reveal">
-              <div className="sec-tag">Our Studio</div>
               <h2>Where ideas in mind take form as matter.</h2>
               <p>
                 Mind2Matter started as a small Caloocan print shop with one simple belief: everyone has an idea
@@ -355,11 +348,9 @@ export default function Home() {
         <section id="contact">
           <div className="contact-panel reveal">
             <div>
-              <div className="sec-tag">Get In Touch</div>
               <h2>Let&apos;s print your idea.</h2>
               <p>Reach out with your design, reference photo, or just a description of what you need — we&apos;ll reply with a quote and timeline.</p>
               <div className="hours-card">
-                <div className="sec-tag">Store Hours</div>
                 <div className="hours-row">
                   <span>Mon – Sat</span>
                   <span>By appointment / message</span>
@@ -443,9 +434,6 @@ export default function Home() {
             <div className="brand-mark">
               <LogoMark />
             </div>
-            <span>
-              Mind<span className="m">2</span>Matter
-            </span>
           </div>
           <div className="footer-links">
             <a href="#services">Services</a>

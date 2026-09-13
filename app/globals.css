@@ -86,7 +86,7 @@ header {
   justify-content: center;
 }
 .logo-img {
-  height: 34px;
+  height: 42px;
   width: auto;
   display: block;
 }
@@ -132,11 +132,16 @@ nav.links a:hover {
 
 /* ---------- HERO ---------- */
 .hero {
-  padding: 64px 0 40px;
+  padding: 64px 0 40px 24px;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 20px;
   align-items: center;
+}
+@media (max-width: 960px) {
+  .hero {
+    padding-left: 0;
+  }
 }
 .chip {
   display: inline-flex;
@@ -354,24 +359,6 @@ nav.links a:hover {
 section {
   padding: 100px 0;
 }
-.sec-tag {
-  font-family: var(--font-plex-mono);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--teal-deep);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.sec-tag::before {
-  content: "";
-  width: 24px;
-  height: 2px;
-  background: var(--teal-deep);
-}
 .sec-head {
   display: flex;
   justify-content: space-between;
@@ -492,12 +479,6 @@ section {
   padding: 70px 48px;
   position: relative;
   z-index: 1;
-}
-.process .sec-tag {
-  color: var(--gold);
-}
-.process .sec-tag::before {
-  background: var(--gold);
 }
 .process h2 {
   color: var(--cream);
@@ -746,13 +727,6 @@ section {
   color: var(--cream);
   border-radius: 20px;
   padding: 24px;
-}
-.hours-card .sec-tag {
-  color: var(--gold);
-  margin-bottom: 16px;
-}
-.hours-card .sec-tag::before {
-  background: var(--gold);
 }
 .hours-row {
   display: flex;
