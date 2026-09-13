@@ -359,7 +359,7 @@ nav.links a:hover {
 }
 .marquee-track span::after {
   content: "◆";
-  color: var(--orange);
+  color: var(--gold-deep);
   font-size: 10px;
 }
 @keyframes scroll {
