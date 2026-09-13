@@ -95,8 +95,12 @@ const DECOR_SHAPES = [
 function DecorShapes() {
   return (
     <div className="decor-layer" aria-hidden="true">
-      {DECOR_SHAPES.map((s, i) =>
-        s.cookie ? (
+      {DECOR_SHAPES.map((s, i) => {
+        const spinStyle = {
+          animationDuration: `${(26 / Math.abs(s.spin)).toFixed(1)}s`,
+          animationDirection: s.spin < 0 ? "reverse" : "normal",
+        };
+        return s.cookie ? (
           <svg
             key={i}
             viewBox="0 0 100 100"
@@ -107,7 +111,7 @@ function DecorShapes() {
               right: s.right,
               width: s.size,
               height: s.size,
-              transform: `rotate(calc(var(--scroll-deg, 0deg) * ${s.spin}))`,
+              ...spinStyle,
             }}
           >
             <path d={COOKIE_PATHS[s.cookie]} fill={s.color} />
@@ -124,11 +128,11 @@ function DecorShapes() {
               height: s.size,
               background: s.color,
               borderRadius: s.radius,
-              transform: `rotate(calc(var(--scroll-deg, 0deg) * ${s.spin}))`,
+              ...spinStyle,
             }}
           />
-        )
-      )}
+        );
+      })}
     </div>
   );
 }
@@ -252,23 +256,6 @@ export default function Home() {
     );
     document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    let raf = null;
-    function onScroll() {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        document.documentElement.style.setProperty("--scroll-deg", `${window.scrollY * 0.08}deg`);
-        raf = null;
-      });
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
   }, []);
 
   return (
