@@ -320,6 +320,24 @@ nav.links a:hover {
   position: relative;
   z-index: 2;
 }
+.marquee-strip::before,
+.marquee-strip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  z-index: 3;
+  pointer-events: none;
+}
+.marquee-strip::before {
+  left: 0;
+  background: linear-gradient(to right, var(--ink), transparent);
+}
+.marquee-strip::after {
+  right: 0;
+  background: linear-gradient(to left, var(--ink), transparent);
+}
 .marquee-track {
   display: flex;
   gap: 40px;
