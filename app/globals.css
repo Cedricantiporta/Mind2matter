@@ -15,7 +15,6 @@
   --pastel-pink: #ffc4dd;
   --pastel-lilac: #c9b8f7;
   --pastel-peach: #ffd3b0;
-  --pastel-butter: #fff3a3;
   --cta: #ffb8d9;
   --cta-deep: #ff9cc7;
   --line: rgba(25, 20, 16, 0.12);
@@ -880,6 +879,8 @@ footer {
   animation-name: shapeSpin;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  pointer-events: auto;
+  cursor: pointer;
 }
 @keyframes shapeSpin {
   from {

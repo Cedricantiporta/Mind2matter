@@ -78,19 +78,30 @@ const COOKIE_PATHS = {
 
 const DECOR_SHAPES = [
   // hero — bold and plentiful
-  { top: "-6%", left: "-4%", size: 240, color: "var(--pastel-pink)", cookie: "clover4", spin: 0.4 },
-  { top: "1%", right: "15%", size: 140, color: "var(--pastel-butter)", cookie: "sunny12", spin: -0.7 },
-  { top: "15%", left: "21%", size: 90, color: "var(--pastel-lilac)", cookie: "cookie6", spin: 1.3 },
-  { top: "-4%", right: "-6%", size: 210, color: "var(--pastel-lilac)", cookie: "cookie7", spin: -0.45 },
-  { top: "22%", left: "0%", size: 120, color: "var(--pastel-peach)", cookie: "cookie9", spin: 0.9 },
+  { top: "-8%", right: "-6%", size: 300, color: "var(--pastel-lilac)", cookie: "clover4", spin: 0.4 },
+  { top: "3%", left: "24%", size: 170, color: "var(--pastel-peach)", cookie: "sunny12", spin: -0.7 },
+  { top: "18%", right: "22%", size: 110, color: "var(--pastel-pink)", cookie: "cookie6", spin: 1.3 },
+  { top: "-6%", left: "-8%", size: 260, color: "var(--pastel-pink)", cookie: "cookie7", spin: -0.45 },
+  { top: "26%", right: "1%", size: 150, color: "var(--pastel-lilac)", cookie: "cookie9", spin: 0.9 },
   // rest of the page
-  { top: "30%", right: "5%", size: 160, color: "var(--pastel-lilac)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
-  { top: "46%", left: "3%", size: 110, color: "var(--pastel-pink)", cookie: "cookie9", spin: 1.1 },
-  { top: "58%", right: "7%", size: 140, color: "var(--pastel-butter)", radius: "55% 45% 60% 40% / 45% 55% 45% 55%", spin: 0.8 },
-  { top: "70%", left: "7%", size: 130, color: "var(--pastel-lilac)", cookie: "clover4", spin: -1.0 },
-  { top: "80%", right: "4%", size: 180, color: "var(--pastel-peach)", cookie: "cookie7", spin: 0.6 },
-  { top: "92%", left: "4%", size: 140, color: "var(--pastel-pink)", cookie: "cookie6", spin: -0.65 },
+  { top: "34%", left: "4%", size: 200, color: "var(--pastel-peach)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
+  { top: "48%", right: "5%", size: 140, color: "var(--pastel-pink)", cookie: "cookie9", spin: 1.1 },
+  { top: "60%", left: "6%", size: 175, color: "var(--pastel-lilac)", radius: "55% 45% 60% 40% / 45% 55% 45% 55%", spin: 0.8 },
+  { top: "72%", right: "8%", size: 160, color: "var(--pastel-peach)", cookie: "clover4", spin: -1.0 },
+  { top: "82%", left: "3%", size: 220, color: "var(--pastel-pink)", cookie: "cookie7", spin: 0.6 },
+  { top: "94%", right: "6%", size: 175, color: "var(--pastel-lilac)", cookie: "cookie6", spin: -0.65 },
 ];
+
+function handleShapeClick(e, spin) {
+  const el = e.currentTarget;
+  const baseDuration = 26 / Math.abs(spin);
+  const fastDuration = Math.max(1.2, baseDuration / 10);
+  el.style.animationDuration = `${fastDuration.toFixed(1)}s`;
+  if (el._spinResetTimer) clearTimeout(el._spinResetTimer);
+  el._spinResetTimer = setTimeout(() => {
+    el.style.animationDuration = `${baseDuration.toFixed(1)}s`;
+  }, 2200);
+}
 
 function DecorShapes() {
   return (
@@ -105,6 +116,7 @@ function DecorShapes() {
             key={i}
             viewBox="0 0 100 100"
             className="decor-shape"
+            onClick={(e) => handleShapeClick(e, s.spin)}
             style={{
               top: s.top,
               left: s.left,
@@ -120,6 +132,7 @@ function DecorShapes() {
           <div
             key={i}
             className="decor-shape"
+            onClick={(e) => handleShapeClick(e, s.spin)}
             style={{
               top: s.top,
               left: s.left,
