@@ -263,7 +263,7 @@ const SWATCH_CLIPS = {
 // mirrors the "letters / numbers / special characters" swatch sheets
 // customers pick from for a real keycap order.
 const KEYCAP_COLORS = [
-  { name: "Black", hex: "#232019" },
+  { name: "Black", hex: "#2b2620" },
   { name: "Purple", hex: "#b7a4f5" },
   { name: "Blue", hex: "#8fd8e0" },
   { name: "Green", hex: "#b7d99a" },
@@ -272,8 +272,24 @@ const KEYCAP_COLORS = [
   { name: "Pink", hex: "#f7bdd8" },
   { name: "Orange", hex: "#f5a35c" },
   { name: "Red", hex: "#e2483d" },
-  { name: "White", hex: "#efe9df" },
+  { name: "Crimson", hex: "#a13a3a" },
+  { name: "Quartz", hex: "#8a5568" },
+  { name: "Iris", hex: "#6a4c93" },
+  { name: "Slate", hex: "#3f6b73" },
+  { name: "Sage", hex: "#64754f" },
+  { name: "Gold", hex: "#c9b877" },
+  { name: "Silver", hex: "#b7ada0" },
 ];
+// Darkens a hex color by `amt` (0-1) — used for each keycap's own extruded
+// "thickness" shade and its same-hue embossed letter, so nothing falls back
+// to a generic grey shadow.
+function darkenHex(hex, amt = 0.32) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.round(((n >> 16) & 255) * (1 - amt));
+  const g = Math.round(((n >> 8) & 255) * (1 - amt));
+  const b = Math.round((n & 255) * (1 - amt));
+  return `rgb(${r}, ${g}, ${b})`;
+}
 
 const KEYCAP_ICONS = [
   { key: "heart", path: "M12 21s-7-6.1-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 4.9-7 11-7 11Z" },
@@ -393,8 +409,8 @@ export default function Home() {
   const [switchIdx, setSwitchIdx] = useState(0);
   const [kcText, setKcText] = useState("M2M");
   const [kcIcons, setKcIcons] = useState([]);
-  const [kcBase, setKcBase] = useState(1);
-  const [kcCap, setKcCap] = useState(9);
+  const [kcBase, setKcBase] = useState(11);
+  const [kcCap, setKcCap] = useState(1);
 
   const kcTokens = [
     ...kcText.split("").map((c) => ({ type: "char", value: c })),
@@ -655,26 +671,39 @@ export default function Home() {
             <div>
               <h2>Design your own keycap keychain.</h2>
             </div>
-            <p>Pick a base and ink color, then type or tap icons to lay out your own set.</p>
+            <p>Pick a base and keycap color, then type or tap icons to lay out your own set.</p>
           </div>
 
-          <div className="kc-preview reveal">
-            {kcTokens.length === 0 && <span className="kc-empty">Start typing below...</span>}
-            {kcTokens.map((t, i) => (
-              <span
-                className="keycap"
-                key={i}
-                style={{ background: KEYCAP_COLORS[kcBase].hex, color: KEYCAP_COLORS[kcCap].hex }}
-              >
-                {t.type === "char" ? (
-                  t.value.toUpperCase()
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d={KEYCAP_ICONS.find((ic) => ic.key === t.value).path} />
-                  </svg>
-                )}
-              </span>
-            ))}
+          <div className="kc-preview reveal" style={{ background: KEYCAP_COLORS[kcBase].hex }}>
+            {kcTokens.length === 0 ? (
+              <span className="kc-empty">Start typing below...</span>
+            ) : (
+              <div className="kc-strip">
+                <span className="kc-ring" aria-hidden="true" />
+                {kcTokens.map((t, i) => (
+                  <span
+                    className="keycap"
+                    key={i}
+                    style={{
+                      background: KEYCAP_COLORS[kcCap].hex,
+                      color: darkenHex(KEYCAP_COLORS[kcCap].hex, 0.4),
+                      boxShadow: `inset 0 3px 0 rgba(255,255,255,.3), inset 0 -10px 0 ${darkenHex(
+                        KEYCAP_COLORS[kcCap].hex,
+                        0.28
+                      )}`,
+                    }}
+                  >
+                    {t.type === "char" ? (
+                      t.value.toUpperCase()
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d={KEYCAP_ICONS.find((ic) => ic.key === t.value).path} />
+                      </svg>
+                    )}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="kc-controls">
@@ -735,7 +764,7 @@ export default function Home() {
               </div>
             </div>
             <div className="kc-palette">
-              <span className="kc-palette-label">Ink color</span>
+              <span className="kc-palette-label">Keycap color</span>
               <div className="kc-swatches">
                 {KEYCAP_COLORS.map((c, i) => (
                   <button
@@ -747,7 +776,7 @@ export default function Home() {
                       kcKeyPress();
                       setKcCap(i);
                     }}
-                    aria-label={`Ink color ${c.name}`}
+                    aria-label={`Keycap color ${c.name}`}
                   />
                 ))}
               </div>

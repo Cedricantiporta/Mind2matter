@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Unbounded, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Unbounded, Plus_Jakarta_Sans, IBM_Plex_Mono, Baloo_2 } from "next/font/google";
 
 const unbounded = Unbounded({
   subsets: ["latin"],
@@ -20,6 +20,12 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
 });
 
+const baloo = Baloo_2({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-baloo",
+});
+
 export const metadata = {
   title: "Mind2Matter — 3D Printing Studio, Caloocan",
   description:
@@ -30,7 +36,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${unbounded.variable} ${jakarta.variable} ${plexMono.variable}`}
+      className={`${unbounded.variable} ${jakarta.variable} ${plexMono.variable} ${baloo.variable}`}
     >
       <body>{children}</body>
     </html>
