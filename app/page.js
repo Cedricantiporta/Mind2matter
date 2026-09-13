@@ -167,7 +167,7 @@ export default function Home() {
               <span className="hl">
                 Physical.
                 <svg viewBox="0 0 220 16" preserveAspectRatio="none">
-                  <path d="M2 10 Q55 2 110 8 T218 6" stroke="var(--orange)" strokeWidth="5" fill="none" strokeLinecap="round" />
+                  <path d="M2 10 Q55 2 110 8 T218 6" stroke="var(--hero-accent)" strokeWidth="5" fill="none" strokeLinecap="round" />
                 </svg>
               </span>
             </h1>
@@ -258,7 +258,6 @@ export default function Home() {
           <div className="services-grid">
             {SERVICES.map((s) => (
               <div className="service-card reveal" key={s.num}>
-                <span className="num">{s.num}</span>
                 <div className={`service-icon ${s.cls}`}>{s.icon}</div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>

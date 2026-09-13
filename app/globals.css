@@ -9,6 +9,8 @@
   --teal: #0f8b8d;
   --teal-deep: #0a6668;
   --gold: #ffc93c;
+  --gold-deep: #b9790a;
+  --hero-accent: #0000ff;
   --line: rgba(25, 20, 16, 0.12);
   --card: #ffffff;
   --radius: 26px;
@@ -171,7 +173,7 @@ nav.links a:hover {
   color: var(--ink);
 }
 .hero h1 .hl {
-  color: var(--orange);
+  color: var(--hero-accent);
   position: relative;
   white-space: nowrap;
 }
@@ -410,12 +412,6 @@ section {
   box-shadow: 0 16px 34px rgba(25, 20, 16, 0.1);
   border-color: var(--orange);
 }
-.service-card .num {
-  font-family: var(--font-plex-mono);
-  font-size: 12px;
-  color: var(--ink-soft);
-  opacity: 0.6;
-}
 .service-icon {
   width: 52px;
   height: 52px;
@@ -440,16 +436,16 @@ section {
   line-height: 1.6;
 }
 .bg-orange {
-  background: #ece6fb;
-  color: var(--orange-deep);
+  background: var(--orange-deep);
+  color: #fff;
 }
 .bg-teal {
-  background: #d9f0ef;
-  color: var(--teal-deep);
+  background: var(--teal);
+  color: #fff;
 }
 .bg-gold {
-  background: #fff2cc;
-  color: #8a6a00;
+  background: var(--gold-deep);
+  color: #fff;
 }
 
 /* ---------- PROCESS ---------- */
@@ -476,17 +472,18 @@ section {
   padding: 0;
 }
 .process-inner {
-  padding: 70px 48px;
+  padding: 100px 64px;
   position: relative;
   z-index: 1;
 }
 .process h2 {
   color: var(--cream);
+  font-size: clamp(34px, 4.4vw, 58px);
 }
 .process p.desc {
   color: rgba(246, 239, 226, 0.65);
-  max-width: 420px;
-  font-size: 15px;
+  max-width: 460px;
+  font-size: 16.5px;
   line-height: 1.6;
 }
 .steps {
@@ -548,14 +545,14 @@ section {
 }
 .swatch {
   aspect-ratio: 1;
-  border-radius: 20px;
+  border-radius: 32px;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
-  padding: 14px;
+  justify-content: center;
+  padding: 18px;
   transition: transform 0.3s ease;
-  box-shadow: inset 0 0 0 1.5px rgba(25, 20, 16, 0.1);
 }
 .swatch:hover {
   transform: scale(1.05) rotate(-1.5deg);
@@ -567,16 +564,6 @@ section {
   background: rgba(255, 255, 255, 0.8);
   padding: 4px 8px;
   border-radius: 8px;
-}
-.swatch::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.16) 0 3px,
-    transparent 3px 7px
-  );
 }
 @media (max-width: 860px) {
   .swatch-grid {
@@ -856,7 +843,6 @@ footer {
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 12px 26px rgba(255, 90, 31, 0.4);
   animation: pulse 2.8s ease-in-out infinite;
 }
 @keyframes pulse {
