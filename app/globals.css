@@ -17,6 +17,7 @@
   --pastel-peach: #ffd3b0;
   --cta: #ffb8d9;
   --cta-deep: #ff9cc7;
+  --pink-deep: #c95f92;
   --line: rgba(25, 20, 16, 0.12);
   --card: #ffffff;
   --radius: 26px;
@@ -310,7 +311,7 @@ nav.links a:hover {
   width: 100%;
 }
 .marquee-strip {
-  background: var(--orange-deep);
+  background: var(--teal-deep);
   color: var(--cream);
   padding: 16px 0;
   overflow: hidden;
@@ -331,11 +332,11 @@ nav.links a:hover {
 }
 .marquee-strip::before {
   left: 0;
-  background: linear-gradient(to right, var(--orange-deep), transparent);
+  background: linear-gradient(to right, var(--teal-deep), transparent);
 }
 .marquee-strip::after {
   right: 0;
-  background: linear-gradient(to left, var(--orange-deep), transparent);
+  background: linear-gradient(to left, var(--teal-deep), transparent);
 }
 .marquee-track {
   display: flex;
@@ -1041,6 +1042,18 @@ section {
   justify-content: center;
   flex-shrink: 0;
 }
+.contact-item:nth-child(4n + 1) .ico {
+  background: var(--teal-deep);
+}
+.contact-item:nth-child(4n + 2) .ico {
+  background: var(--orange-deep);
+}
+.contact-item:nth-child(4n + 3) .ico {
+  background: var(--gold-deep);
+}
+.contact-item:nth-child(4n + 4) .ico {
+  background: var(--pink-deep);
+}
 .contact-item .ico svg {
   width: 18px;
   height: 18px;
@@ -1056,7 +1069,7 @@ section {
   font-family: var(--font-plex-mono);
 }
 .hours-card {
-  background: var(--orange-deep);
+  background: var(--pink-deep);
   color: var(--cream);
   border-radius: 20px;
   padding: 24px;
@@ -1165,7 +1178,7 @@ footer {
   transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 .socials a:hover {
-  background: var(--orange-deep);
+  background: var(--gold-deep);
   color: var(--cream);
   transform: translateY(-3px);
 }
