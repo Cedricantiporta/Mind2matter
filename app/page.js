@@ -294,14 +294,17 @@ const KEYCAP_COLORS = [
 // a curve instead of pinching at corners/seams when the offset radius is
 // left equal to the keycap's.
 const KC_TILE = 66;
-const KC_GAP = 8;
+const KC_GAP = 10;
 const KC_PAD = 7;
 const KC_KEY_R = 14; // matches .keycap border-radius
-const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness on the true outer corners
-const KC_SEAM_R = KC_KEY_R; // seam notch stays as shallow as the keycap's own corner curve
+const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness everywhere
+// The seam MUST use the same radius as the outer corners (not an
+// independent value) or the two curves aren't concentric: the lip
+// pinches to a sharp point at the bottom of the notch instead of
+// reading as one continuous curve. Same R everywhere = no seam.
 function kcBasePath(count) {
   const R = KC_OUTER_R;
-  const RS = KC_SEAM_R;
+  const RS = KC_OUTER_R;
   const W = KC_PAD * 2 + count * KC_TILE + (count - 1) * KC_GAP;
   const H = KC_PAD * 2 + KC_TILE;
   const seams = [];

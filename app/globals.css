@@ -771,7 +771,7 @@ section {
   position: absolute;
   inset: 7px;
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 .keycap {
   width: 66px;
@@ -787,7 +787,6 @@ section {
   font-size: 44px;
   letter-spacing: -0.02em;
   text-transform: uppercase;
-  -webkit-text-stroke: 1px rgba(20, 14, 28, 0.5);
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.14);
   transition: transform 0.1s ease;
