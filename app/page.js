@@ -433,6 +433,7 @@ export default function Home() {
   const [kcText, setKcText] = useState("PINK");
   const [kcBase, setKcBase] = useState(6);
   const [kcCap, setKcCap] = useState(6);
+  const [openPalette, setOpenPalette] = useState(null); // null | "base" | "cap"
 
   const kcTokens = kcText.split("");
   const kcBaseShape = kcTokens.length ? kcBasePath(kcTokens.length) : null;
@@ -713,6 +714,13 @@ export default function Home() {
             <div className="kc-palette-row">
               <div className="kc-palette">
                 <span className="kc-palette-label">Base color</span>
+                <button
+                  type="button"
+                  className="kc-swatch-trigger"
+                  style={{ background: KEYCAP_COLORS[kcBase].hex }}
+                  onClick={() => setOpenPalette("base")}
+                  aria-label="Choose base color"
+                />
                 <div className="kc-swatches">
                   {KEYCAP_COLORS.map((c, i) => (
                     <button
@@ -731,6 +739,13 @@ export default function Home() {
               </div>
               <div className="kc-palette">
                 <span className="kc-palette-label">Keycap color</span>
+                <button
+                  type="button"
+                  className="kc-swatch-trigger"
+                  style={{ background: KEYCAP_COLORS[kcCap].hex }}
+                  onClick={() => setOpenPalette("cap")}
+                  aria-label="Choose keycap color"
+                />
                 <div className="kc-swatches">
                   {KEYCAP_COLORS.map((c, i) => (
                     <button
@@ -754,6 +769,41 @@ export default function Home() {
             </a>
           </div>
         </section>
+
+        {openPalette && (
+          <div className="kc-popup-backdrop" onClick={() => setOpenPalette(null)}>
+            <div className="kc-popup" onClick={(e) => e.stopPropagation()}>
+              <div className="kc-popup-head">
+                <span>{openPalette === "base" ? "Base color" : "Keycap color"}</span>
+                <button
+                  type="button"
+                  className="kc-popup-close"
+                  onClick={() => setOpenPalette(null)}
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="kc-swatches kc-swatches-popup">
+                {KEYCAP_COLORS.map((c, i) => (
+                  <button
+                    type="button"
+                    className={`kc-dot${i === (openPalette === "base" ? kcBase : kcCap) ? " active" : ""}`}
+                    style={{ background: c.hex }}
+                    key={c.name}
+                    onClick={() => {
+                      kcKeyPress();
+                      if (openPalette === "base") setKcBase(i);
+                      else setKcCap(i);
+                      setOpenPalette(null);
+                    }}
+                    aria-label={`${openPalette === "base" ? "Base" : "Keycap"} color ${c.name}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         <section id="about">
           <div className="about">
