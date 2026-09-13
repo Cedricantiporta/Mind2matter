@@ -43,37 +43,92 @@ function LogoMark() {
   return <img src="/logo.png" alt="Mind2Matter" className="logo-img" />;
 }
 
+// Generates a smooth scalloped "cookie" blob path (Material-You-style shape):
+// alternating outer/inner control points sit on a circle; the curve passes
+// through the MIDPOINT of each pair of neighboring points, bulging toward the
+// point itself via a quadratic bezier — soft rounded lobes, no sharp corners.
+function cookiePath(count, outerR, innerR, cx = 50, cy = 50) {
+  const n = count * 2;
+  const step = (Math.PI * 2) / n;
+  const V = [];
+  for (let i = 0; i < n; i++) {
+    const a = i * step - Math.PI / 2;
+    const r = i % 2 === 0 ? outerR : innerR;
+    V.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+  }
+  const M = V.map((v, i) => {
+    const next = V[(i + 1) % n];
+    return [(v[0] + next[0]) / 2, (v[1] + next[1]) / 2];
+  });
+  let d = `M ${M[0][0].toFixed(2)} ${M[0][1].toFixed(2)} `;
+  for (let i = 0; i < n; i++) {
+    const v = V[(i + 1) % n];
+    const m = M[(i + 1) % n];
+    d += `Q ${v[0].toFixed(2)} ${v[1].toFixed(2)} ${m[0].toFixed(2)} ${m[1].toFixed(2)} `;
+  }
+  return d + "Z";
+}
+const COOKIE_PATHS = {
+  clover4: cookiePath(4, 46, 18),
+  cookie6: cookiePath(6, 44, 33),
+  cookie7: cookiePath(7, 43, 34),
+  cookie9: cookiePath(9, 42, 35),
+  sunny12: cookiePath(12, 44, 27),
+};
+
 const DECOR_SHAPES = [
-  { top: "1%", left: "3%", size: 90, color: "var(--pastel-pink)", radius: "42% 58% 65% 35% / 45% 45% 55% 55%", spin: 0.55 },
-  { top: "6%", right: "5%", size: 46, color: "var(--pastel-butter)", spin: -0.9, star: true },
-  { top: "24%", left: "8%", size: 54, color: "var(--pastel-peach)", radius: "60% 40% 55% 45% / 40% 55% 45% 60%", spin: 1.1 },
-  { top: "33%", right: "7%", size: 110, color: "var(--pastel-lilac)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
-  { top: "48%", left: "5%", size: 40, color: "var(--pastel-pink)", spin: 1.3, star: true },
-  { top: "58%", right: "9%", size: 72, color: "var(--pastel-butter)", radius: "55% 45% 60% 40% / 45% 55% 45% 55%", spin: 0.8 },
-  { top: "70%", left: "9%", size: 60, color: "var(--pastel-lilac)", spin: -1.2, star: true },
-  { top: "80%", right: "6%", size: 95, color: "var(--pastel-peach)", radius: "50% 50% 42% 58% / 58% 42% 58% 42%", spin: 0.65 },
-  { top: "92%", left: "6%", size: 56, color: "var(--pastel-pink)", radius: "45% 55% 50% 50% / 50% 60% 40% 50%", spin: -0.7 },
+  // hero — bold and plentiful
+  { top: "-6%", left: "-4%", size: 240, color: "var(--pastel-pink)", cookie: "clover4", spin: 0.4 },
+  { top: "1%", right: "15%", size: 140, color: "var(--pastel-butter)", cookie: "sunny12", spin: -0.7 },
+  { top: "15%", left: "21%", size: 90, color: "var(--pastel-lilac)", cookie: "cookie6", spin: 1.3 },
+  { top: "-4%", right: "-6%", size: 210, color: "var(--pastel-lilac)", cookie: "cookie7", spin: -0.45 },
+  { top: "22%", left: "0%", size: 120, color: "var(--pastel-peach)", cookie: "cookie9", spin: 0.9 },
+  // rest of the page
+  { top: "30%", right: "5%", size: 160, color: "var(--pastel-lilac)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
+  { top: "46%", left: "3%", size: 110, color: "var(--pastel-pink)", cookie: "cookie9", spin: 1.1 },
+  { top: "58%", right: "7%", size: 140, color: "var(--pastel-butter)", radius: "55% 45% 60% 40% / 45% 55% 45% 55%", spin: 0.8 },
+  { top: "70%", left: "7%", size: 130, color: "var(--pastel-lilac)", cookie: "clover4", spin: -1.0 },
+  { top: "80%", right: "4%", size: 180, color: "var(--pastel-peach)", cookie: "cookie7", spin: 0.6 },
+  { top: "92%", left: "4%", size: 140, color: "var(--pastel-pink)", cookie: "cookie6", spin: -0.65 },
 ];
 
 function DecorShapes() {
   return (
     <div className="decor-layer" aria-hidden="true">
-      {DECOR_SHAPES.map((s, i) => (
-        <div
-          key={i}
-          className={`decor-shape${s.star ? " is-star" : ""}`}
-          style={{
-            top: s.top,
-            left: s.left,
-            right: s.right,
-            width: s.size,
-            height: s.size,
-            background: s.color,
-            borderRadius: s.radius,
-            transform: `rotate(calc(var(--scroll-deg, 0deg) * ${s.spin}))`,
-          }}
-        />
-      ))}
+      {DECOR_SHAPES.map((s, i) =>
+        s.cookie ? (
+          <svg
+            key={i}
+            viewBox="0 0 100 100"
+            className="decor-shape"
+            style={{
+              top: s.top,
+              left: s.left,
+              right: s.right,
+              width: s.size,
+              height: s.size,
+              transform: `rotate(calc(var(--scroll-deg, 0deg) * ${s.spin}))`,
+            }}
+          >
+            <path d={COOKIE_PATHS[s.cookie]} fill={s.color} />
+          </svg>
+        ) : (
+          <div
+            key={i}
+            className="decor-shape"
+            style={{
+              top: s.top,
+              left: s.left,
+              right: s.right,
+              width: s.size,
+              height: s.size,
+              background: s.color,
+              borderRadius: s.radius,
+              transform: `rotate(calc(var(--scroll-deg, 0deg) * ${s.spin}))`,
+            }}
+          />
+        )
+      )}
     </div>
   );
 }
