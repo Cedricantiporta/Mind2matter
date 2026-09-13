@@ -280,16 +280,6 @@ const KEYCAP_COLORS = [
   { name: "Gold", hex: "#c9b877" },
   { name: "Silver", hex: "#b7ada0" },
 ];
-// Darkens a hex color by `amt` (0-1) — used for each keycap's own extruded
-// "thickness" shade and its same-hue embossed letter, so nothing falls back
-// to a generic grey shadow.
-function darkenHex(hex, amt = 0.32) {
-  const n = parseInt(hex.slice(1), 16);
-  const r = Math.round(((n >> 16) & 255) * (1 - amt));
-  const g = Math.round(((n >> 8) & 255) * (1 - amt));
-  const b = Math.round((n & 255) * (1 - amt));
-  return `rgb(${r}, ${g}, ${b})`;
-}
 
 const KEYCAP_ICONS = [
   { key: "heart", path: "M12 21s-7-6.1-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 4.9-7 11-7 11Z" },
@@ -674,25 +664,14 @@ export default function Home() {
             <p>Pick a base and keycap color, then type or tap icons to lay out your own set.</p>
           </div>
 
-          <div className="kc-preview reveal" style={{ background: KEYCAP_COLORS[kcBase].hex }}>
+          <div className="kc-preview reveal">
             {kcTokens.length === 0 ? (
               <span className="kc-empty">Start typing below...</span>
             ) : (
-              <div className="kc-strip">
-                <span className="kc-ring" aria-hidden="true" />
+              <div className="kc-base" style={{ background: KEYCAP_COLORS[kcBase].hex }}>
+                <div className="kc-strip">
                 {kcTokens.map((t, i) => (
-                  <span
-                    className="keycap"
-                    key={i}
-                    style={{
-                      background: KEYCAP_COLORS[kcCap].hex,
-                      color: darkenHex(KEYCAP_COLORS[kcCap].hex, 0.4),
-                      boxShadow: `inset 0 3px 0 rgba(255,255,255,.3), inset 0 -10px 0 ${darkenHex(
-                        KEYCAP_COLORS[kcCap].hex,
-                        0.28
-                      )}`,
-                    }}
-                  >
+                  <span className="keycap" key={i} style={{ background: KEYCAP_COLORS[kcCap].hex }}>
                     {t.type === "char" ? (
                       t.value.toUpperCase()
                     ) : (
@@ -702,6 +681,7 @@ export default function Home() {
                     )}
                   </span>
                 ))}
+                </div>
               </div>
             )}
           </div>
