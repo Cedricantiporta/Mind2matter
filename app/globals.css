@@ -28,8 +28,6 @@
 }
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
-  width: 100%;
 }
 body {
   background: var(--page-bg);
@@ -176,6 +174,7 @@ nav.links a:hover {
 }
 .hero-main {
   pointer-events: none;
+  overflow-x: hidden;
 }
 .hero-main .btn,
 .hero-main .decor-shape {
@@ -307,6 +306,10 @@ nav.links a:hover {
 }
 
 /* ---------- MARQUEE ---------- */
+.marquee-clip {
+  overflow-x: hidden;
+  width: 100%;
+}
 .marquee-strip {
   background: var(--ink);
   color: var(--cream);
@@ -593,6 +596,76 @@ section {
   to {
     transform: rotate(360deg) scale(1);
   }
+}
+.swatch-spin .swatch-click {
+  animation: swatchSpinCounter 0.55s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+@keyframes swatchSpinCounter {
+  from {
+    transform: rotate(0deg);
+  }
+  60% {
+    transform: rotate(-300deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.type-tester {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 40px;
+}
+.type-tester-label {
+  font-family: var(--font-plex-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+.type-tester-select {
+  width: min(340px, 90%);
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--pastel-lilac);
+  color: var(--ink);
+  font-family: var(--font-plex-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.type-tester-input {
+  width: min(420px, 92%);
+  padding: 16px 26px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-unbounded);
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.type-tester-input::placeholder {
+  color: var(--ink);
+  opacity: 0.4;
+  font-weight: 500;
+}
+.type-tester-input:focus {
+  transform: scale(1.02);
+  box-shadow: 0 6px 0 var(--ink);
 }
 .swatch-label {
   font-family: var(--font-unbounded);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const FB_URL = "https://www.facebook.com/profile.php?id=61573794730980";
 const IG_URL = "https://instagram.com/mind2matterph";
@@ -27,6 +27,21 @@ const MECH_VARIANTS = [
   { filter: "lowpass", freq: 600, q: 1, dur: 0.05, noiseGain: 0.22, tone: 105, toneGain: 0.26, double: false }, // black — heavy linear
   { filter: "highpass", freq: 3800, q: 4, dur: 0.015, noiseGain: 0.55, tone: 2400, toneGain: 0.08, double: true }, // clear — stiff click
   { filter: "lowpass", freq: 380, q: 0.8, dur: 0.055, noiseGain: 0.12, tone: 90, toneGain: 0.3, double: false }, // silent — creamy thump
+  { filter: "lowpass", freq: 220, q: 0.6, dur: 0.07, noiseGain: 0.1, tone: 65, toneGain: 0.34, double: false }, // topre — deep capacitive thock
+  { filter: "bandpass", freq: 2200, q: 8, dur: 0.018, noiseGain: 0.6, tone: 1400, toneGain: 0.14, double: true }, // buckling spring — vintage clack
+];
+
+// Named real-world switch types a visitor can pick from, each mapped to one
+// of the synthesized MECH_VARIANTS above (index into that array).
+const SWITCH_LIB = [
+  { label: "Cherry MX Blue — Clicky", variant: 0 },
+  { label: "Cherry MX Brown — Tactile", variant: 1 },
+  { label: "Cherry MX Red — Linear", variant: 2 },
+  { label: "Cherry MX Black — Heavy Linear", variant: 3 },
+  { label: "Gateron Clear — Stiff Click", variant: 4 },
+  { label: "Gateron Yellow — Creamy Thock", variant: 5 },
+  { label: "Topre — Deep Thock", variant: 6 },
+  { label: "Buckling Spring — Vintage Clack", variant: 7 },
 ];
 function fireClickBurst(ctx, v, when) {
   const noise = ctx.createBufferSource();
@@ -299,6 +314,8 @@ const STEPS = [
 ];
 
 export default function Home() {
+  const [switchIdx, setSwitchIdx] = useState(0);
+
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) => {
@@ -418,6 +435,7 @@ export default function Home() {
         </section>
       </main>
 
+      <div className="marquee-clip">
       <div className="marquee-strip">
         <div className="marquee-track">
           {Array.from({ length: 2 }).map((_, i) => (
@@ -429,6 +447,7 @@ export default function Home() {
             )
           )}
         </div>
+      </div>
       </div>
 
       <main className="wrap">
@@ -474,6 +493,33 @@ export default function Home() {
               <h2>Pick a color, we&apos;ll load the spool.</h2>
             </div>
             <p>A running sample of finishes we keep in stock. More shades available on request.</p>
+          </div>
+          <div className="type-tester reveal">
+            <span className="type-tester-label">Type to hear the switches</span>
+            <select
+              className="type-tester-select"
+              value={switchIdx}
+              onChange={(e) => {
+                const idx = Number(e.target.value);
+                setSwitchIdx(idx);
+                playMechClick(SWITCH_LIB[idx].variant);
+              }}
+              aria-label="Pick a switch type"
+            >
+              {SWITCH_LIB.map((sw, i) => (
+                <option value={i} key={sw.label}>
+                  {sw.label}
+                </option>
+              ))}
+            </select>
+            <input
+              type="text"
+              className="type-tester-input"
+              placeholder="Try it — start typing..."
+              autoComplete="off"
+              spellCheck="false"
+              onKeyDown={() => playMechClick(SWITCH_LIB[switchIdx].variant)}
+            />
           </div>
           <div className="swatch-grid">
             {SWATCHES.map((sw) => (
