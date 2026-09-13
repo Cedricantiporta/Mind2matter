@@ -599,33 +599,6 @@ export default function Home() {
             </div>
             <p>A running sample of finishes we keep in stock. More shades available on request.</p>
           </div>
-          <div className="type-tester reveal">
-            <span className="type-tester-label">Type to hear the switches</span>
-            <select
-              className="type-tester-select"
-              value={switchIdx}
-              onChange={(e) => {
-                const idx = Number(e.target.value);
-                setSwitchIdx(idx);
-                playMechClick(SWITCH_LIB[idx].variant);
-              }}
-              aria-label="Pick a switch type"
-            >
-              {SWITCH_LIB.map((sw, i) => (
-                <option value={i} key={sw.label}>
-                  {sw.label}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              className="type-tester-input"
-              placeholder="Try it — start typing..."
-              autoComplete="off"
-              spellCheck="false"
-              onKeyDown={() => playMechClick(SWITCH_LIB[switchIdx].variant)}
-            />
-          </div>
           <div className="swatch-grid">
             {SWATCHES.map((sw) => (
               <div className="swatch-item reveal" key={sw.label}>
@@ -662,6 +635,26 @@ export default function Home() {
               <h2>Design your own keycap keychain.</h2>
             </div>
             <p>Pick a base and keycap color, then type or tap icons to lay out your own set.</p>
+          </div>
+
+          <div className="type-tester reveal">
+            <span className="type-tester-label">Type to hear the switches</span>
+            <select
+              className="type-tester-select"
+              value={switchIdx}
+              onChange={(e) => {
+                const idx = Number(e.target.value);
+                setSwitchIdx(idx);
+                playMechClick(SWITCH_LIB[idx].variant);
+              }}
+              aria-label="Pick a switch type"
+            >
+              {SWITCH_LIB.map((sw, i) => (
+                <option value={i} key={sw.label}>
+                  {sw.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="kc-preview reveal">
