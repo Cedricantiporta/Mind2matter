@@ -267,6 +267,14 @@ const SWATCH_CLIPS = {
 // `ink` is each keycap's own letter color — a darker same-family shade on
 // light/pastel tiles (monochrome, embossed look), or a light tint on the
 // darkest/most saturated tiles where a darker tone would vanish.
+function darkenHex(hex, amt = 0.3) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.round(((n >> 16) & 255) * (1 - amt));
+  const g = Math.round(((n >> 8) & 255) * (1 - amt));
+  const b = Math.round((n & 255) * (1 - amt));
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
 const KEYCAP_COLORS = [
   { name: "Black", hex: "#2b2620", ink: "#eee6d8" },
   { name: "Purple", hex: "#b7a4f5", ink: "#5b3fa0" },
@@ -679,7 +687,18 @@ export default function Home() {
               <span className="kc-empty">Start typing below...</span>
             ) : (
               <div className="kc-base-wrap" style={{ width: kcBaseShape.width, height: kcBaseShape.height }}>
-                <svg className="kc-base-shape" width={kcBaseShape.width} height={kcBaseShape.height} aria-hidden="true">
+                <svg
+                  className="kc-base-shape"
+                  width={kcBaseShape.width}
+                  height={kcBaseShape.height}
+                  style={{ overflow: "visible" }}
+                  aria-hidden="true"
+                >
+                  <path
+                    d={kcBaseShape.d}
+                    fill={darkenHex(KEYCAP_COLORS[kcBase].hex, 0.32)}
+                    transform="translate(0, 8)"
+                  />
                   <path d={kcBaseShape.d} fill={KEYCAP_COLORS[kcBase].hex} />
                 </svg>
                 <div className="kc-strip">
