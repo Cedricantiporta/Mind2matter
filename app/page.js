@@ -80,9 +80,9 @@ const DECOR_SHAPES = [
   // hero — bold and plentiful
   { top: "-8%", right: "-6%", size: 300, color: "var(--pastel-lilac)", cookie: "clover4", spin: 0.4 },
   { top: "3%", left: "24%", size: 170, color: "var(--pastel-peach)", cookie: "sunny12", spin: -0.7 },
-  { top: "18%", right: "22%", size: 110, color: "var(--pastel-pink)", cookie: "cookie6", spin: 1.3 },
+  { top: "9%", right: "28%", size: 190, color: "var(--pastel-pink)", cookie: "cookie6", spin: 1.3 },
   { top: "-6%", left: "-8%", size: 260, color: "var(--pastel-pink)", cookie: "cookie7", spin: -0.45 },
-  { top: "26%", right: "1%", size: 150, color: "var(--pastel-lilac)", cookie: "cookie9", spin: 0.9 },
+  { top: "20%", right: "22%", size: 230, color: "var(--pastel-lilac)", cookie: "cookie9", spin: 0.9 },
   // rest of the page
   { top: "34%", left: "4%", size: 200, color: "var(--pastel-peach)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
   { top: "48%", right: "5%", size: 140, color: "var(--pastel-pink)", cookie: "cookie9", spin: 1.1 },
