@@ -168,7 +168,6 @@ const DECOR_SHAPES = [
   { top: "34%", left: "4%", size: 200, color: "var(--pastel-peach)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
   { top: "42%", right: "18%", size: 170, color: "var(--pastel-lilac)", cookie: "sunny12", spin: -0.7 },
   { top: "82%", left: "3%", size: 220, color: "var(--pastel-pink)", cookie: "cookie7", spin: 0.6 },
-  { top: "94%", right: "6%", size: 175, color: "var(--pastel-lilac)", cookie: "cookie6", spin: -0.65 },
 ];
 
 // Sit inside .hero-art itself, in DOM order before the mascot image, so they

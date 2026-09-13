@@ -74,7 +74,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--cream);
+  background: #ffffff;
   border: 1.5px solid var(--line);
   border-radius: 999px;
   padding: 10px 10px 10px 20px;
@@ -368,7 +368,8 @@ nav.links a:hover {
 }
 
 #colors {
-  padding-top: 20px;
+  padding-top: 0;
+  padding-bottom: 30px;
 }
 
 /* ---------- SECTION HEADERS ---------- */
@@ -943,7 +944,7 @@ section {
   bottom: 20px;
   left: 20px;
   right: 20px;
-  background: rgba(124, 106, 209, 0.9);
+  background: rgba(25, 20, 16, 0.85);
   backdrop-filter: blur(6px);
   border-radius: 16px;
   padding: 16px 18px;
