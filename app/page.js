@@ -5,6 +5,40 @@ import { useEffect } from "react";
 const FB_URL = "https://www.facebook.com/profile.php?id=61573794730980";
 const IG_URL = "https://instagram.com/mind2matterph";
 
+let audioCtx;
+const CLICK_VARIANTS = [
+  { type: "square", from: 1700, to: 320, gain: 0.22 },
+  { type: "sawtooth", from: 1300, to: 240, gain: 0.18 },
+  { type: "sine", from: 1000, to: 180, gain: 0.26 },
+];
+function playClickSound(variant = 0) {
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return;
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+
+  const v = CLICK_VARIANTS[variant % CLICK_VARIANTS.length];
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = v.type;
+  osc.frequency.setValueAtTime(v.from, now);
+  osc.frequency.exponentialRampToValueAtTime(v.to, now + 0.035);
+  gain.gain.setValueAtTime(v.gain, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + 0.06);
+}
+
+function handleSwatchClick(e, variant) {
+  playClickSound(variant);
+  const el = e.currentTarget;
+  el.classList.remove("swatch-bounce");
+  void el.offsetWidth;
+  el.classList.add("swatch-bounce");
+}
+
 function LogoMark() {
   return <img src="/logo.png" alt="Mind2Matter" className="logo-img" />;
 }
@@ -31,7 +65,7 @@ const SERVICES = [
     num: "01",
     cls: "bg-orange",
     title: "Custom 3D Prints",
-    desc: "Send an STL or a rough sketch — we model, slice, and print it to spec.",
+    desc: "Send an STL or a rough sketch, and we model, slice, and print it to spec.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none">
         <path d="M12 2l9 5v10l-9 5-9-5V7z" stroke="currentColor" strokeWidth="1.8" />
@@ -43,7 +77,7 @@ const SERVICES = [
     num: "02",
     cls: "bg-teal",
     title: "Keychains & Accessories",
-    desc: "Names, mascots, tiny logos — durable little keepsakes people actually keep.",
+    desc: "Names, mascots, tiny logos: durable little keepsakes people actually keep.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8" />
@@ -55,7 +89,7 @@ const SERVICES = [
     num: "03",
     cls: "bg-gold",
     title: "Home Decor & Organizers",
-    desc: "Planters, trays, desk organizers — practical pieces built to fit your space.",
+    desc: "Planters, trays, desk organizers: practical pieces built to fit your space.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none">
         <path d="M4 10h16M4 14h16" stroke="currentColor" strokeWidth="1.8" />
@@ -78,7 +112,7 @@ const SERVICES = [
     num: "05",
     cls: "bg-teal",
     title: "Personalized Gifts",
-    desc: "Birthdays, giveaways, souvenirs — one-off pieces made for the occasion.",
+    desc: "Birthdays, giveaways, souvenirs: one-off pieces made for the occasion.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none">
         <path
@@ -107,7 +141,7 @@ const SERVICES = [
 ];
 
 const STEPS = [
-  { n: "1", title: "Send your idea", desc: "A file, a photo, or just a description — message us on Facebook." },
+  { n: "1", title: "Send your idea", desc: "A file, a photo, or just a description. Message us on Facebook." },
   { n: "2", title: "We quote & slice", desc: "We confirm size, color, and material, then prep the print." },
   { n: "3", title: "Layer by layer", desc: "Your object gets printed on our bed, one pass at a time." },
   { n: "4", title: "Pickup or delivery", desc: "Grab it in Caloocan or have it sent your way." },
@@ -167,12 +201,13 @@ export default function Home() {
               <span className="hl">
                 Physical.
                 <svg viewBox="0 0 220 16" preserveAspectRatio="none">
-                  <path d="M2 10 Q55 2 110 8 T218 6" stroke="var(--hero-accent)" strokeWidth="5" fill="none" strokeLinecap="round" />
+                  <path d="M2 10 Q55 2 110 8 T218 6" stroke="var(--ink)" strokeWidth="9" fill="none" strokeLinecap="round" />
+                  <path d="M2 10 Q55 2 110 8 T218 6" stroke="var(--orange)" strokeWidth="5" fill="none" strokeLinecap="round" />
                 </svg>
               </span>
             </h1>
             <p className="lead">
-              Mind2Matter is a Caloocan-based 3D printing studio. Send us your design — or just an idea — and
+              Mind2Matter is a Caloocan-based 3D printing studio. Send us your design, or just an idea, and
               we&apos;ll slice, print, and hand you something you can actually hold.
             </p>
             <div className="hero-ctas">
@@ -248,7 +283,7 @@ export default function Home() {
             <div>
               <h2>One studio, every kind of layer.</h2>
             </div>
-            <p>From a single replacement part to a full run of gifts — if it can be modeled, we can print it in Caloocan.</p>
+            <p>From a single replacement part to a full run of gifts, if it can be modeled, we can print it in Caloocan.</p>
           </div>
           <div className="services-grid">
             {SERVICES.map((s) => (
@@ -265,7 +300,7 @@ export default function Home() {
           <div className="process reveal">
             <div className="process-inner">
               <h2>Idea to object, four steps.</h2>
-              <p className="desc">No modeling experience needed — tell us what you&apos;re picturing and we&apos;ll take it from there.</p>
+              <p className="desc">No modeling experience needed. Tell us what you&apos;re picturing and we&apos;ll take it from there.</p>
               <div className="steps">
                 {STEPS.map((s) => (
                   <div className="step" key={s.n}>
@@ -284,12 +319,21 @@ export default function Home() {
             <div>
               <h2>Pick a color, we&apos;ll load the spool.</h2>
             </div>
-            <p>A running sample of finishes we keep in stock — more shades available on request.</p>
+            <p>A running sample of finishes we keep in stock. More shades available on request.</p>
           </div>
           <div className="swatch-grid">
-            {SWATCHES.map((sw) => (
-              <div className="swatch reveal" style={{ background: sw.bg }} key={sw.label}>
-                <span>{sw.label}</span>
+            {SWATCHES.map((sw, i) => (
+              <div className="swatch-item reveal" key={sw.label}>
+                <button
+                  type="button"
+                  className="swatch"
+                  style={{ background: sw.bg }}
+                  onClick={(e) => handleSwatchClick(e, Math.floor(i / 2))}
+                  aria-label={`${sw.label}: click for a tactile click sound`}
+                >
+                  <span className="swatch-click">Click Me</span>
+                </button>
+                <span className="swatch-label">{sw.label}</span>
               </div>
             ))}
           </div>
@@ -298,12 +342,7 @@ export default function Home() {
         <section id="about">
           <div className="about">
             <div className="about-visual reveal">
-              <svg viewBox="0 0 240 260" fill="none">
-                <rect x="20" y="20" width="200" height="220" rx="24" fill="rgba(246,239,226,.12)" />
-                <path d="M60 190 L60 120 L120 70 L180 120 L180 190 Z" stroke="var(--cream)" strokeWidth="4" fill="none" strokeLinejoin="round" />
-                <path d="M60 120 L120 170 L180 120" stroke="var(--cream)" strokeWidth="4" fill="none" strokeLinejoin="round" />
-                <path d="M120 170 L120 70" stroke="var(--cream)" strokeWidth="4" />
-              </svg>
+              <img src="/about.jpg" alt="Mind2Matter at a market booth" className="about-photo" />
               <div className="about-badge">
                 <div>
                   <strong>M2M</strong>Studio
@@ -318,7 +357,7 @@ export default function Home() {
               <p>
                 Mind2Matter started as a small Caloocan print shop with one simple belief: everyone has an idea
                 worth holding in their hands. Whether it&apos;s a gift, a prop, a fix for something broken, or a
-                business prototype — we print it with care, one layer at a time.
+                business prototype, we print it with care, one layer at a time.
               </p>
               <p>Every order is handled directly by us, from slicing to finishing, so what you get back looks like what you asked for.</p>
               <div className="about-stats">
@@ -343,7 +382,7 @@ export default function Home() {
           <div className="contact-panel reveal">
             <div>
               <h2>Let&apos;s print your idea.</h2>
-              <p>Reach out with your design, reference photo, or just a description of what you need — we&apos;ll reply with a quote and timeline.</p>
+              <p>Reach out with your design, reference photo, or just a description of what you need. We&apos;ll reply with a quote and timeline.</p>
               <div className="hours-card">
                 <div className="hours-row">
                   <span>Mon – Sat</span>
@@ -389,7 +428,7 @@ export default function Home() {
                 </span>
                 <div>
                   <strong>Mind2Matter</strong>
-                  <span>facebook.com — send a message</span>
+                  <span>facebook.com · send a message</span>
                 </div>
               </a>
               <a className="contact-item" href={IG_URL} target="_blank" rel="noopener">
