@@ -284,6 +284,46 @@ const KEYCAP_COLORS = [
   { name: "Silver", hex: "#b7ada0", ink: "#6b6155" },
 ];
 
+// Base geometry mirrors the keycap strip exactly (same tile size, gap and
+// padding as the .keycap/.kc-strip CSS below). The base is the UNION of one
+// rounded lobe per keycap, so each seam is two convex corner arcs meeting at
+// a cusp (like real fused keycaps) rather than a single half-circle notch.
+const KC_TILE = 66;
+const KC_GAP = 5;
+const KC_PAD = 7;
+const KC_OUTER_R = 20;
+function kcBasePath(count) {
+  const R = KC_OUTER_R;
+  const lobeW = KC_TILE + KC_PAD * 2;
+  const step = KC_TILE + KC_GAP;
+  const W = (count - 1) * step + lobeW;
+  const H = KC_PAD * 2 + KC_TILE;
+  // Adjacent lobes overlap, so their corner circles intersect. Solve for the
+  // cusp: same radius, centers level, separated by d along x.
+  const d = 2 * R - (lobeW - step);
+  const h = Math.sqrt(Math.max(R * R - (d / 2) * (d / 2), 0));
+  const seams = [];
+  for (let i = 0; i < count - 1; i++) {
+    const c1x = i * step + lobeW - R; // lobe i, right corner centre
+    const c2x = (i + 1) * step + R; // lobe i+1, left corner centre
+    seams.push({ c1x, c2x, cusp: (c1x + c2x) / 2 });
+  }
+  let d2 = `M ${R} 0 `;
+  seams.forEach((s) => {
+    d2 += `L ${s.c1x} 0 A ${R} ${R} 0 0 1 ${s.cusp} ${R - h} `;
+    d2 += `A ${R} ${R} 0 0 1 ${s.c2x} 0 `;
+  });
+  d2 += `L ${W - R} 0 A ${R} ${R} 0 0 1 ${W} ${R} `;
+  d2 += `L ${W} ${H - R} A ${R} ${R} 0 0 1 ${W - R} ${H} `;
+  [...seams].reverse().forEach((s) => {
+    d2 += `L ${s.c2x} ${H} A ${R} ${R} 0 0 1 ${s.cusp} ${H - R + h} `;
+    d2 += `A ${R} ${R} 0 0 1 ${s.c1x} ${H} `;
+  });
+  d2 += `L ${R} ${H} A ${R} ${R} 0 0 1 0 ${H - R} `;
+  d2 += `L 0 ${R} A ${R} ${R} 0 0 1 ${R} 0 Z`;
+  return { d: d2, width: W, height: H };
+}
+
 const SERVICES = [
   {
     num: "01",
@@ -378,6 +418,7 @@ export default function Home() {
   const [kcCap, setKcCap] = useState(1);
 
   const kcTokens = kcText.split("");
+  const kcBaseShape = kcTokens.length ? kcBasePath(kcTokens.length) : null;
 
   function kcKeyPress() {
     playMechClick(SWITCH_LIB[switchIdx].variant);
@@ -627,7 +668,19 @@ export default function Home() {
             {kcTokens.length === 0 ? (
               <span className="kc-empty">Start typing below...</span>
             ) : (
-              <div className="kc-base" style={{ background: KEYCAP_COLORS[kcBase].hex }}>
+              <div className="kc-base-wrap" style={{ width: kcBaseShape.width, height: kcBaseShape.height }}>
+                <svg className="kc-base-shape" width={kcBaseShape.width} height={kcBaseShape.height} aria-hidden="true">
+                  <defs>
+                    <linearGradient id="kc-base-grad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stopColor="#fff" stopOpacity="0.3" />
+                      <stop offset="0.18" stopColor="#fff" stopOpacity="0" />
+                      <stop offset="0.82" stopColor="#000" stopOpacity="0" />
+                      <stop offset="1" stopColor="#000" stopOpacity="0.24" />
+                    </linearGradient>
+                  </defs>
+                  <path d={kcBaseShape.d} fill={KEYCAP_COLORS[kcBase].hex} />
+                  <path d={kcBaseShape.d} fill="url(#kc-base-grad)" stroke="rgba(20,14,28,0.55)" strokeWidth="3" />
+                </svg>
                 <div className="kc-strip">
                   {kcTokens.map((c, i) => (
                     <span
