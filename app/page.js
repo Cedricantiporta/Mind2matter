@@ -241,12 +241,12 @@ function FacebookIcon() {
 }
 
 const SWATCHES = [
-  { bg: "#ff5a1f", label: "PLA Orange", shape: "square", effect: "bounce", sound: 0 },
-  { bg: "#0f8b8d", label: "Deep Teal", shape: "cookie6", effect: "fidget", sound: 1 },
-  { bg: "#191410", label: "Matte Black", shape: "clover4", effect: "bounce", extra: "rainbow", sound: 2 },
-  { bg: "#ffc93c", label: "Sunbeam Gold", shape: "cookie7", effect: "rotate", extra: "morph", sound: 3 },
-  { bg: "#e7e0d2", label: "Bone White", shape: "cookie9", effect: "bounce", sound: 4 },
-  { bg: "#7c5cff", label: "Galaxy Purple", shape: "sunny12", effect: "rotate", sound: 5 },
+  { bg: "#ffd3b0", label: "PLA Orange", shape: "square", effect: "bounce", sound: 0 },
+  { bg: "#a9e8df", label: "Deep Teal", shape: "cookie6", effect: "fidget", sound: 1 },
+  { bg: "#c9b8f7", label: "Matte Black", shape: "clover4", effect: "bounce", extra: "rainbow", sound: 2 },
+  { bg: "#ffe37e", label: "Sunbeam Gold", shape: "cookie7", effect: "rotate", extra: "morph", sound: 3 },
+  { bg: "#ffc4dd", label: "Bone White", shape: "cookie9", effect: "bounce", sound: 4 },
+  { bg: "#d4c9ff", label: "Galaxy Purple", shape: "sunny12", effect: "rotate", sound: 5 },
 ];
 const SHAPE_KEYS = ["square", "cookie6", "clover4", "cookie7", "cookie9", "sunny12"];
 // Normalized (objectBoundingBox, 0-1) versions of the cookie shapes for use
@@ -431,9 +431,9 @@ const STEPS = [
 
 export default function Home() {
   const [switchIdx, setSwitchIdx] = useState(0);
-  const [kcText, setKcText] = useState("M2M");
-  const [kcBase, setKcBase] = useState(1);
-  const [kcCap, setKcCap] = useState(1);
+  const [kcText, setKcText] = useState("PINK");
+  const [kcBase, setKcBase] = useState(6);
+  const [kcCap, setKcCap] = useState(6);
 
   const kcTokens = kcText.split("");
   const kcBaseShape = kcTokens.length ? kcBasePath(kcTokens.length) : null;
@@ -485,7 +485,7 @@ export default function Home() {
             <nav className="links">
               <a href="#services">Services</a>
               <a href="#process">Process</a>
-              <a href="#colors">Colors</a>
+              <a href="#customize">Design a Keychain</a>
               <a href="#about">About</a>
               <a href="#contact">Contact</a>
             </nav>
@@ -624,43 +624,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="colors">
-          <div className="sec-head reveal">
-            <div>
-              <h2>Pick a color, we&apos;ll load the spool.</h2>
-            </div>
-            <p>A running sample of finishes we keep in stock. More shades available on request.</p>
-          </div>
-          <div className="swatch-grid">
-            {SWATCHES.map((sw) => (
-              <div className="swatch-item reveal" key={sw.label}>
-                <button
-                  type="button"
-                  className={`swatch${sw.shape === "square" ? " swatch-square" : ""}`}
-                  style={{
-                    background: sw.bg,
-                    clipPath: sw.shape === "square" ? undefined : `url(#swatch-clip-${sw.shape})`,
-                  }}
-                  onClick={(e) => handleSwatchClick(e, sw)}
-                  aria-label={`${sw.label}: click for a mechanical-switch click sound`}
-                >
-                  <span className="swatch-click">Click Me</span>
-                </button>
-                <span className="swatch-label">{sw.label}</span>
-              </div>
-            ))}
-          </div>
-          <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-            <defs>
-              {Object.entries(SWATCH_CLIPS).map(([name, d]) => (
-                <clipPath id={`swatch-clip-${name}`} clipPathUnits="objectBoundingBox" key={name}>
-                  <path d={d} />
-                </clipPath>
-              ))}
-            </defs>
-          </svg>
-        </section>
-
         <section id="customize">
           <div className="sec-head reveal">
             <div>
@@ -702,8 +665,8 @@ export default function Home() {
                 >
                   <path
                     d={kcBaseShape.d}
-                    fill={darkenHex(KEYCAP_COLORS[kcBase].hex, 0.32)}
-                    transform="translate(0, 8)"
+                    fill={darkenHex(KEYCAP_COLORS[kcBase].hex, 0.16)}
+                    transform="translate(0, 5)"
                   />
                   <path d={kcBaseShape.d} fill={KEYCAP_COLORS[kcBase].hex} />
                 </svg>
@@ -785,6 +748,10 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          <a className="kc-send-btn" href={FB_URL} target="_blank" rel="noopener">
+            Send My Design
+          </a>
         </section>
 
         <section id="about">
@@ -907,6 +874,34 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <section id="colors" aria-hidden="true">
+          <div className="swatch-grid swatch-grid-shapes">
+            {SWATCHES.map((sw) => (
+              <div className="swatch-item reveal" key={sw.label}>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className={`swatch${sw.shape === "square" ? " swatch-square" : ""}`}
+                  style={{
+                    background: sw.bg,
+                    clipPath: sw.shape === "square" ? undefined : `url(#swatch-clip-${sw.shape})`,
+                  }}
+                  onClick={(e) => handleSwatchClick(e, sw)}
+                />
+              </div>
+            ))}
+          </div>
+          <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+            <defs>
+              {Object.entries(SWATCH_CLIPS).map(([name, d]) => (
+                <clipPath id={`swatch-clip-${name}`} clipPathUnits="objectBoundingBox" key={name}>
+                  <path d={d} />
+                </clipPath>
+              ))}
+            </defs>
+          </svg>
+        </section>
       </main>
 
       <footer className="wrap">
@@ -919,7 +914,7 @@ export default function Home() {
           <div className="footer-links">
             <a href="#services">Services</a>
             <a href="#process">Process</a>
-            <a href="#colors">Colors</a>
+            <a href="#customize">Design a Keychain</a>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
           </div>

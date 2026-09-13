@@ -74,8 +74,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
+  background: var(--cream);
   border: 1.5px solid var(--line);
   border-radius: 999px;
   padding: 10px 10px 10px 20px;
@@ -366,6 +365,10 @@ nav.links a:hover {
   to {
     transform: translateX(-50%);
   }
+}
+
+#colors {
+  padding-top: 20px;
 }
 
 /* ---------- SECTION HEADERS ---------- */
@@ -772,7 +775,7 @@ section {
   border: 3px solid rgba(15, 10, 20, 0.6);
   font-family: var(--font-railroad), var(--font-unbounded);
   font-weight: 400;
-  font-size: 44px;
+  font-size: 52px;
   letter-spacing: -0.02em;
   text-transform: uppercase;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
@@ -891,6 +894,26 @@ section {
 .kc-dot.active {
   border-color: var(--ink);
   box-shadow: 0 0 0 2px var(--cream), 0 0 0 4px var(--ink);
+}
+.kc-send-btn {
+  display: block;
+  width: fit-content;
+  margin: 36px auto 0;
+  padding: 16px 36px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--cta);
+  color: var(--ink);
+  font-family: var(--font-unbounded);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.kc-send-btn:hover {
+  background: var(--cta-deep);
+  transform: translateY(-2px);
 }
 
 /* ---------- ABOUT ---------- */
