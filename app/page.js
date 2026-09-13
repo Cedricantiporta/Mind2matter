@@ -82,13 +82,42 @@ function playMechClick(variant = 0) {
   }
 }
 
-function handleSwatchClick(e, variant, effect) {
-  playMechClick(variant);
+function handleSwatchClick(e, sw) {
+  playMechClick(sw.sound);
   const el = e.currentTarget;
-  const cls = effect === "rotate" ? "swatch-spin" : "swatch-bounce";
-  el.classList.remove("swatch-spin", "swatch-bounce");
-  void el.offsetWidth;
-  el.classList.add(cls);
+
+  if (sw.effect === "fidget") {
+    el.classList.remove("swatch-fidget");
+    void el.offsetWidth;
+    el.classList.add("swatch-fidget");
+    clearTimeout(el._fidgetTimer);
+    el._fidgetTimer = setTimeout(() => el.classList.remove("swatch-fidget"), 3000);
+  } else {
+    const cls = sw.effect === "rotate" ? "swatch-spin" : "swatch-bounce";
+    el.classList.remove("swatch-spin", "swatch-bounce");
+    void el.offsetWidth;
+    el.classList.add(cls);
+  }
+
+  if (sw.extra === "rainbow") {
+    el.classList.remove("swatch-rainbow");
+    void el.offsetWidth;
+    el.classList.add("swatch-rainbow");
+    clearTimeout(el._rainbowTimer);
+    el._rainbowTimer = setTimeout(() => el.classList.remove("swatch-rainbow"), 3000);
+  }
+
+  if (sw.extra === "morph") {
+    clearTimeout(el._morphTimer);
+    const others = SHAPE_KEYS.filter((k) => k !== sw.shape);
+    const pick = others[Math.floor(Math.random() * others.length)];
+    el.classList.toggle("swatch-square", pick === "square");
+    el.style.clipPath = pick === "square" ? "" : `url(#swatch-clip-${pick})`;
+    el._morphTimer = setTimeout(() => {
+      el.classList.toggle("swatch-square", sw.shape === "square");
+      el.style.clipPath = sw.shape === "square" ? "" : `url(#swatch-clip-${sw.shape})`;
+    }, 4000);
+  }
 }
 
 function LogoMark() {
@@ -211,12 +240,13 @@ function FacebookIcon() {
 
 const SWATCHES = [
   { bg: "#ff5a1f", label: "PLA Orange", shape: "square", effect: "bounce", sound: 0 },
-  { bg: "#0f8b8d", label: "Deep Teal", shape: "cookie6", effect: "rotate", sound: 1 },
-  { bg: "#191410", label: "Matte Black", shape: "clover4", effect: "bounce", sound: 2 },
-  { bg: "#ffc93c", label: "Sunbeam Gold", shape: "cookie7", effect: "rotate", sound: 3 },
+  { bg: "#0f8b8d", label: "Deep Teal", shape: "cookie6", effect: "fidget", sound: 1 },
+  { bg: "#191410", label: "Matte Black", shape: "clover4", effect: "bounce", extra: "rainbow", sound: 2 },
+  { bg: "#ffc93c", label: "Sunbeam Gold", shape: "cookie7", effect: "rotate", extra: "morph", sound: 3 },
   { bg: "#e7e0d2", label: "Bone White", shape: "cookie9", effect: "bounce", sound: 4 },
   { bg: "#7c5cff", label: "Galaxy Purple", shape: "sunny12", effect: "rotate", sound: 5 },
 ];
+const SHAPE_KEYS = ["square", "cookie6", "clover4", "cookie7", "cookie9", "sunny12"];
 // Normalized (objectBoundingBox, 0-1) versions of the cookie shapes for use
 // as <clipPath> on the swatch buttons, so they scale with the button's own
 // responsive size instead of a fixed pixel path.
@@ -531,7 +561,7 @@ export default function Home() {
                     background: sw.bg,
                     clipPath: sw.shape === "square" ? undefined : `url(#swatch-clip-${sw.shape})`,
                   }}
-                  onClick={(e) => handleSwatchClick(e, sw.sound, sw.effect)}
+                  onClick={(e) => handleSwatchClick(e, sw)}
                   aria-label={`${sw.label}: click for a mechanical-switch click sound`}
                 >
                   <span className="swatch-click">Click Me</span>

@@ -611,6 +611,53 @@ section {
     transform: rotate(-360deg);
   }
 }
+.swatch-fidget {
+  animation: fidgetSpin 3s cubic-bezier(0.11, 0.7, 0.16, 1) forwards;
+}
+@keyframes fidgetSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(2520deg);
+  }
+}
+.swatch-fidget .swatch-click {
+  animation: fidgetSpinCounter 3s cubic-bezier(0.11, 0.7, 0.16, 1) forwards;
+}
+@keyframes fidgetSpinCounter {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-2520deg);
+  }
+}
+.swatch-rainbow {
+  background: linear-gradient(
+    90deg,
+    #ff4d5a,
+    #ff9f45,
+    #ffe14d,
+    #63e06a,
+    #4d9fff,
+    #b26bff,
+    #ff4d5a
+  ) !important;
+  background-size: 300% 100%;
+  animation: rainbowShift 3s linear forwards;
+}
+@keyframes rainbowShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+.swatch-bounce.swatch-rainbow {
+  animation: swatchPop 0.32s ease, rainbowShift 3s linear forwards;
+}
 .type-tester {
   display: flex;
   flex-direction: column;
