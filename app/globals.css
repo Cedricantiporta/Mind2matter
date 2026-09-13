@@ -12,6 +12,12 @@
   --gold-deep: #b9790a;
   --pastel-teal: #a9e8df;
   --pastel-gold: #ffe37e;
+  --pastel-pink: #ffc4dd;
+  --pastel-lilac: #c9b8f7;
+  --pastel-peach: #ffd3b0;
+  --pastel-butter: #fff3a3;
+  --cta: #e6549c;
+  --cta-deep: #c43f7d;
   --line: rgba(25, 20, 16, 0.12);
   --card: #ffffff;
   --radius: 26px;
@@ -111,7 +117,7 @@ nav.links a:hover {
   color: var(--orange-deep);
 }
 .cta-pill {
-  background: var(--ink);
+  background: var(--cta);
   color: var(--cream);
   padding: 11px 22px;
   border-radius: 999px;
@@ -125,7 +131,7 @@ nav.links a:hover {
 }
 .cta-pill:hover {
   transform: translateY(-2px);
-  background: var(--orange-deep);
+  background: var(--cta-deep);
 }
 @media (max-width: 860px) {
   nav.links {
@@ -210,12 +216,13 @@ nav.links a:hover {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .btn-solid {
-  background: var(--ink);
+  background: var(--cta);
   color: var(--cream);
 }
 .btn-solid:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 22px rgba(25, 20, 16, 0.25);
+  background: var(--cta-deep);
+  box-shadow: 0 10px 22px rgba(230, 84, 156, 0.35);
 }
 .btn-outline {
   border: 2px solid var(--ink);
@@ -223,7 +230,8 @@ nav.links a:hover {
 }
 .btn-outline:hover {
   transform: translateY(-3px);
-  background: var(--ink);
+  background: var(--cta);
+  border-color: var(--cta);
   color: var(--cream);
 }
 .feat-row {
@@ -844,5 +852,36 @@ footer {
   }
   .float-msg {
     padding: 15px;
+  }
+}
+
+/* ---------- DECORATIVE SHAPES ---------- */
+.decor-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+.decor-shape {
+  position: absolute;
+  opacity: 0.5;
+  will-change: transform;
+}
+.decor-shape.is-star {
+  clip-path: polygon(
+    50% 0%,
+    62% 38%,
+    100% 50%,
+    62% 62%,
+    50% 100%,
+    38% 62%,
+    0% 50%,
+    38% 38%
+  );
+}
+@media (max-width: 700px) {
+  .decor-shape {
+    opacity: 0.28;
   }
 }

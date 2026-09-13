@@ -43,6 +43,41 @@ function LogoMark() {
   return <img src="/logo.png" alt="Mind2Matter" className="logo-img" />;
 }
 
+const DECOR_SHAPES = [
+  { top: "1%", left: "3%", size: 90, color: "var(--pastel-pink)", radius: "42% 58% 65% 35% / 45% 45% 55% 55%", spin: 0.55 },
+  { top: "6%", right: "5%", size: 46, color: "var(--pastel-butter)", spin: -0.9, star: true },
+  { top: "24%", left: "8%", size: 54, color: "var(--pastel-peach)", radius: "60% 40% 55% 45% / 40% 55% 45% 60%", spin: 1.1 },
+  { top: "33%", right: "7%", size: 110, color: "var(--pastel-lilac)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
+  { top: "48%", left: "5%", size: 40, color: "var(--pastel-pink)", spin: 1.3, star: true },
+  { top: "58%", right: "9%", size: 72, color: "var(--pastel-butter)", radius: "55% 45% 60% 40% / 45% 55% 45% 55%", spin: 0.8 },
+  { top: "70%", left: "9%", size: 60, color: "var(--pastel-lilac)", spin: -1.2, star: true },
+  { top: "80%", right: "6%", size: 95, color: "var(--pastel-peach)", radius: "50% 50% 42% 58% / 58% 42% 58% 42%", spin: 0.65 },
+  { top: "92%", left: "6%", size: 56, color: "var(--pastel-pink)", radius: "45% 55% 50% 50% / 50% 60% 40% 50%", spin: -0.7 },
+];
+
+function DecorShapes() {
+  return (
+    <div className="decor-layer" aria-hidden="true">
+      {DECOR_SHAPES.map((s, i) => (
+        <div
+          key={i}
+          className={`decor-shape${s.star ? " is-star" : ""}`}
+          style={{
+            top: s.top,
+            left: s.left,
+            right: s.right,
+            width: s.size,
+            height: s.size,
+            background: s.color,
+            borderRadius: s.radius,
+            transform: `rotate(calc(var(--scroll-deg, 0deg) * ${s.spin}))`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function FacebookIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -164,8 +199,26 @@ export default function Home() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(() => {
+    let raf = null;
+    function onScroll() {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        document.documentElement.style.setProperty("--scroll-deg", `${window.scrollY * 0.08}deg`);
+        raf = null;
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <>
+      <DecorShapes />
       <header>
         <div className="wrap">
           <div className="navbar">
