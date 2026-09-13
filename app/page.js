@@ -285,43 +285,35 @@ const KEYCAP_COLORS = [
 ];
 
 // Base geometry mirrors the keycap strip exactly (same tile size, gap and
-// padding as the .keycap/.kc-strip CSS below). The base is the UNION of one
-// rounded lobe per keycap, so each seam is two convex corner arcs meeting at
-// a cusp (like real fused keycaps) rather than a single half-circle notch.
+// padding as the .keycap/.kc-strip CSS below). Each seam is a smooth,
+// tangent-continuous "waist" built from two concave fillets that use the
+// SAME radius as the keycap's own corner radius (KC_OUTER_R === the
+// .keycap border-radius), so the seam curve reads as the same curve size
+// as the keycaps themselves instead of a sharper, mismatched notch.
 const KC_TILE = 66;
 const KC_GAP = 5;
 const KC_PAD = 7;
 const KC_OUTER_R = 20;
 function kcBasePath(count) {
   const R = KC_OUTER_R;
-  const lobeW = KC_TILE + KC_PAD * 2;
-  const step = KC_TILE + KC_GAP;
-  const W = (count - 1) * step + lobeW;
+  const W = KC_PAD * 2 + count * KC_TILE + (count - 1) * KC_GAP;
   const H = KC_PAD * 2 + KC_TILE;
-  // Adjacent lobes overlap, so their corner circles intersect. Solve for the
-  // cusp: same radius, centers level, separated by d along x.
-  const d = 2 * R - (lobeW - step);
-  const h = Math.sqrt(Math.max(R * R - (d / 2) * (d / 2), 0));
   const seams = [];
   for (let i = 0; i < count - 1; i++) {
-    const c1x = i * step + lobeW - R; // lobe i, right corner centre
-    const c2x = (i + 1) * step + R; // lobe i+1, left corner centre
-    seams.push({ c1x, c2x, cusp: (c1x + c2x) / 2 });
+    seams.push(KC_PAD + (i + 1) * KC_TILE + i * KC_GAP + KC_GAP / 2);
   }
-  let d2 = `M ${R} 0 `;
-  seams.forEach((s) => {
-    d2 += `L ${s.c1x} 0 A ${R} ${R} 0 0 1 ${s.cusp} ${R - h} `;
-    d2 += `A ${R} ${R} 0 0 1 ${s.c2x} 0 `;
+  let d = `M ${R} 0 `;
+  seams.forEach((sx) => {
+    d += `L ${sx - R} 0 A ${R} ${R} 0 0 1 ${sx} ${R} A ${R} ${R} 0 0 1 ${sx + R} 0 `;
   });
-  d2 += `L ${W - R} 0 A ${R} ${R} 0 0 1 ${W} ${R} `;
-  d2 += `L ${W} ${H - R} A ${R} ${R} 0 0 1 ${W - R} ${H} `;
-  [...seams].reverse().forEach((s) => {
-    d2 += `L ${s.c2x} ${H} A ${R} ${R} 0 0 1 ${s.cusp} ${H - R + h} `;
-    d2 += `A ${R} ${R} 0 0 1 ${s.c1x} ${H} `;
+  d += `L ${W - R} 0 A ${R} ${R} 0 0 1 ${W} ${R} `;
+  d += `L ${W} ${H - R} A ${R} ${R} 0 0 1 ${W - R} ${H} `;
+  [...seams].reverse().forEach((sx) => {
+    d += `L ${sx + R} ${H} A ${R} ${R} 0 0 1 ${sx} ${H - R} A ${R} ${R} 0 0 1 ${sx - R} ${H} `;
   });
-  d2 += `L ${R} ${H} A ${R} ${R} 0 0 1 0 ${H - R} `;
-  d2 += `L 0 ${R} A ${R} ${R} 0 0 1 ${R} 0 Z`;
-  return { d: d2, width: W, height: H };
+  d += `L ${R} ${H} A ${R} ${R} 0 0 1 0 ${H - R} `;
+  d += `L 0 ${R} A ${R} ${R} 0 0 1 ${R} 0 Z`;
+  return { d, width: W, height: H };
 }
 
 const SERVICES = [
@@ -679,7 +671,7 @@ export default function Home() {
                     </linearGradient>
                   </defs>
                   <path d={kcBaseShape.d} fill={KEYCAP_COLORS[kcBase].hex} />
-                  <path d={kcBaseShape.d} fill="url(#kc-base-grad)" stroke="rgba(20,14,28,0.55)" strokeWidth="3" />
+                  <path d={kcBaseShape.d} fill="url(#kc-base-grad)" />
                 </svg>
                 <div className="kc-strip">
                   {kcTokens.map((c, i) => (
