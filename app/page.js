@@ -201,7 +201,7 @@ export default function Home() {
               <span className="hl">
                 Physical.
                 <svg viewBox="0 0 220 16" preserveAspectRatio="none">
-                  <path d="M2 10 Q55 2 110 8 T218 6" stroke="var(--ink)" strokeWidth="9" fill="none" strokeLinecap="round" />
+                  <path d="M2 10 Q55 2 110 8 T218 6" stroke="var(--ink)" strokeWidth="7" fill="none" strokeLinecap="round" />
                   <path d="M2 10 Q55 2 110 8 T218 6" stroke="var(--orange)" strokeWidth="5" fill="none" strokeLinecap="round" />
                 </svg>
               </span>
