@@ -43,6 +43,8 @@ const SWITCH_LIB = [
   { label: "Topre — Deep Thock", variant: 6 },
   { label: "Buckling Spring — Vintage Clack", variant: 7 },
 ];
+const MASTER_VOLUME = 2.2;
+
 function fireClickBurst(ctx, v, when) {
   const noise = ctx.createBufferSource();
   noise.buffer = getNoiseBuffer(ctx);
@@ -51,7 +53,7 @@ function fireClickBurst(ctx, v, when) {
   filt.frequency.value = v.freq;
   filt.Q.value = v.q;
   const ng = ctx.createGain();
-  ng.gain.setValueAtTime(v.noiseGain, when);
+  ng.gain.setValueAtTime(Math.min(1, v.noiseGain * MASTER_VOLUME), when);
   ng.gain.exponentialRampToValueAtTime(0.001, when + v.dur);
   noise.connect(filt).connect(ng).connect(ctx.destination);
   noise.start(when);
@@ -61,7 +63,7 @@ function fireClickBurst(ctx, v, when) {
   osc.type = "sine";
   osc.frequency.setValueAtTime(v.tone, when);
   const og = ctx.createGain();
-  og.gain.setValueAtTime(v.toneGain, when);
+  og.gain.setValueAtTime(Math.min(1, v.toneGain * MASTER_VOLUME), when);
   og.gain.exponentialRampToValueAtTime(0.001, when + v.dur * 1.4);
   osc.connect(og).connect(ctx.destination);
   osc.start(when);
