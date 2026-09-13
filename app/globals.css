@@ -309,19 +309,21 @@ nav.links a:hover {
 .marquee-clip {
   overflow: hidden;
   width: 100%;
+  position: relative;
 }
 .marquee-strip {
-  background: var(--teal-deep);
+  background: var(--pink-deep);
   color: var(--cream);
   padding: 16px 0;
   overflow: hidden;
   transform: rotate(-1.4deg);
-  margin: 40px 0 -6px;
+  width: 120%;
+  margin: 40px 0 -6px -10%;
   position: relative;
   z-index: 2;
 }
-.marquee-strip::before,
-.marquee-strip::after {
+.marquee-clip::before,
+.marquee-clip::after {
   content: "";
   position: absolute;
   top: 0;
@@ -330,13 +332,13 @@ nav.links a:hover {
   z-index: 3;
   pointer-events: none;
 }
-.marquee-strip::before {
+.marquee-clip::before {
   left: 0;
-  background: linear-gradient(to right, var(--teal-deep), transparent);
+  background: linear-gradient(to right, var(--pink-deep), transparent);
 }
-.marquee-strip::after {
+.marquee-clip::after {
   right: 0;
-  background: linear-gradient(to left, var(--teal-deep), transparent);
+  background: linear-gradient(to left, var(--pink-deep), transparent);
 }
 .marquee-track {
   display: flex;
@@ -368,6 +370,9 @@ nav.links a:hover {
   }
 }
 
+#contact {
+  padding-bottom: 30px;
+}
 #colors {
   padding-top: 0;
   padding-bottom: 30px;
@@ -1023,12 +1028,24 @@ section {
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  background: var(--cream);
+  background: var(--pastel-teal);
   border-radius: 16px;
-  transition: transform 0.2s, background 0.2s;
+  transition: transform 0.2s, filter 0.2s;
+}
+.contact-item:nth-child(4n + 1) {
+  background: var(--pastel-teal);
+}
+.contact-item:nth-child(4n + 2) {
+  background: var(--pastel-lilac);
+}
+.contact-item:nth-child(4n + 3) {
+  background: var(--pastel-gold);
+}
+.contact-item:nth-child(4n + 4) {
+  background: var(--pastel-pink);
 }
 .contact-item:hover {
-  background: #efe4fb;
+  filter: brightness(0.96);
   transform: translateX(4px);
 }
 .contact-item .ico {
@@ -1069,7 +1086,7 @@ section {
   font-family: var(--font-plex-mono);
 }
 .hours-card {
-  background: var(--pink-deep);
+  background: var(--teal-deep);
   color: var(--cream);
   border-radius: 20px;
   padding: 24px;
