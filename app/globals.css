@@ -15,8 +15,8 @@
   --pastel-pink: #ffc4dd;
   --pastel-lilac: #c9b8f7;
   --pastel-peach: #ffd3b0;
-  --cta: #ffb8d9;
-  --cta-deep: #ff9cc7;
+  --cta: #ffc4dd;
+  --cta-deep: #ffabc9;
   --pink-deep: #c95f92;
   --line: rgba(25, 20, 16, 0.12);
   --card: #ffffff;
@@ -314,8 +314,8 @@ nav.links a:hover {
   padding: 40px 0;
 }
 .marquee-strip {
-  background: var(--pink-deep);
-  color: var(--cream);
+  background: var(--pastel-peach);
+  color: var(--ink);
   padding: 16px 0;
   overflow: hidden;
   transform: rotate(-1.4deg);
@@ -335,11 +335,11 @@ nav.links a:hover {
 }
 .marquee-strip::before {
   left: 0;
-  background: linear-gradient(to right, var(--pink-deep), transparent);
+  background: linear-gradient(to right, var(--pastel-peach), transparent);
 }
 .marquee-strip::after {
   right: 0;
-  background: linear-gradient(to left, var(--pink-deep), transparent);
+  background: linear-gradient(to left, var(--pastel-peach), transparent);
 }
 .marquee-track {
   display: flex;
@@ -578,6 +578,7 @@ section {
   cursor: pointer;
   position: relative;
   display: block;
+  filter: drop-shadow(0 4px 8px rgba(25, 20, 16, 0.12));
 }
 .swatch-square {
   width: 86%;
@@ -601,15 +602,19 @@ section {
 @keyframes swatchPop {
   0% {
     transform: scale(1);
+    filter: drop-shadow(0 4px 8px rgba(25, 20, 16, 0.12));
   }
   35% {
     transform: scale(0.86);
+    filter: drop-shadow(0 2px 4px rgba(25, 20, 16, 0.1));
   }
   65% {
     transform: scale(1.07);
+    filter: drop-shadow(0 14px 20px rgba(25, 20, 16, 0.32));
   }
   100% {
     transform: scale(1);
+    filter: drop-shadow(0 4px 8px rgba(25, 20, 16, 0.12));
   }
 }
 .swatch-spin {
@@ -618,12 +623,15 @@ section {
 @keyframes swatchSpin {
   from {
     transform: rotate(0deg) scale(1);
+    filter: drop-shadow(0 4px 8px rgba(25, 20, 16, 0.12));
   }
   60% {
     transform: rotate(300deg) scale(1.08);
+    filter: drop-shadow(0 16px 22px rgba(25, 20, 16, 0.32));
   }
   to {
     transform: rotate(360deg) scale(1);
+    filter: drop-shadow(0 4px 8px rgba(25, 20, 16, 0.12));
   }
 }
 .swatch-spin .swatch-click {
