@@ -262,23 +262,26 @@ const SWATCH_CLIPS = {
 // (character) color, then type or click icons to lay out a custom set —
 // mirrors the "letters / numbers / special characters" swatch sheets
 // customers pick from for a real keycap order.
+// `ink` is each keycap's own letter color — a darker same-family shade on
+// light/pastel tiles (monochrome, embossed look), or a light tint on the
+// darkest/most saturated tiles where a darker tone would vanish.
 const KEYCAP_COLORS = [
-  { name: "Black", hex: "#2b2620" },
-  { name: "Purple", hex: "#b7a4f5" },
-  { name: "Blue", hex: "#8fd8e0" },
-  { name: "Green", hex: "#b7d99a" },
-  { name: "Yellow", hex: "#f5df8a" },
-  { name: "Brown", hex: "#c9a27a" },
-  { name: "Pink", hex: "#f7bdd8" },
-  { name: "Orange", hex: "#f5a35c" },
-  { name: "Red", hex: "#e2483d" },
-  { name: "Crimson", hex: "#a13a3a" },
-  { name: "Quartz", hex: "#8a5568" },
-  { name: "Iris", hex: "#6a4c93" },
-  { name: "Slate", hex: "#3f6b73" },
-  { name: "Sage", hex: "#64754f" },
-  { name: "Gold", hex: "#c9b877" },
-  { name: "Silver", hex: "#b7ada0" },
+  { name: "Black", hex: "#2b2620", ink: "#eee6d8" },
+  { name: "Purple", hex: "#b7a4f5", ink: "#5b3fa0" },
+  { name: "Blue", hex: "#8fd8e0", ink: "#1f6b74" },
+  { name: "Green", hex: "#b7d99a", ink: "#4a6b32" },
+  { name: "Yellow", hex: "#f5df8a", ink: "#a8862a" },
+  { name: "Brown", hex: "#c9a27a", ink: "#6b4423" },
+  { name: "Pink", hex: "#f7bdd8", ink: "#a94571" },
+  { name: "Orange", hex: "#f5a35c", ink: "#a85a1e" },
+  { name: "Red", hex: "#e2483d", ink: "#ffffff" },
+  { name: "Crimson", hex: "#a13a3a", ink: "#f3dede" },
+  { name: "Quartz", hex: "#8a5568", ink: "#f0dbe2" },
+  { name: "Iris", hex: "#6a4c93", ink: "#e3d9f5" },
+  { name: "Slate", hex: "#3f6b73", ink: "#d7ecec" },
+  { name: "Sage", hex: "#64754f", ink: "#e6ecd9" },
+  { name: "Gold", hex: "#c9b877", ink: "#7a6b2e" },
+  { name: "Silver", hex: "#b7ada0", ink: "#6b6155" },
 ];
 
 const KEYCAP_ICONS = [
@@ -664,7 +667,11 @@ export default function Home() {
               <div className="kc-base" style={{ background: KEYCAP_COLORS[kcBase].hex }}>
                 <div className="kc-strip">
                   {kcTokens.map((t, i) => (
-                    <span className="keycap" key={i} style={{ background: KEYCAP_COLORS[kcCap].hex }}>
+                    <span
+                      className="keycap"
+                      key={i}
+                      style={{ background: KEYCAP_COLORS[kcCap].hex, color: KEYCAP_COLORS[kcCap].ink }}
+                    >
                       {t.type === "char" ? (
                         t.value.toUpperCase()
                       ) : (
