@@ -432,7 +432,7 @@ const STEPS = [
 export default function Home() {
   const [switchIdx, setSwitchIdx] = useState(0);
   const [kcText, setKcText] = useState("M2M");
-  const [kcBase, setKcBase] = useState(11);
+  const [kcBase, setKcBase] = useState(1);
   const [kcCap, setKcCap] = useState(1);
 
   const kcTokens = kcText.split("");
@@ -440,6 +440,13 @@ export default function Home() {
 
   function kcKeyPress() {
     playMechClick(SWITCH_LIB[switchIdx].variant);
+  }
+  function handleKeycapClick(e) {
+    kcKeyPress();
+    const el = e.currentTarget;
+    el.classList.remove("keycap-press");
+    void el.offsetWidth;
+    el.classList.add("keycap-press");
   }
   function kcRemoveLast() {
     setKcText((prev) => prev.slice(0, -1));
@@ -703,13 +710,16 @@ export default function Home() {
                 </svg>
                 <div className="kc-strip">
                   {kcTokens.map((c, i) => (
-                    <span
+                    <button
+                      type="button"
                       className="keycap"
                       key={i}
                       style={{ background: KEYCAP_COLORS[kcCap].hex, color: KEYCAP_COLORS[kcCap].ink }}
+                      onClick={handleKeycapClick}
+                      aria-label={`Key ${c.toUpperCase()}: click for a mechanical-switch click sound`}
                     >
                       {c.toUpperCase()}
-                    </span>
+                    </button>
                   ))}
                 </div>
               </div>
