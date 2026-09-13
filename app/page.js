@@ -284,33 +284,6 @@ const KEYCAP_COLORS = [
   { name: "Silver", hex: "#b7ada0", ink: "#6b6155" },
 ];
 
-const KEYCAP_ICONS = [
-  { key: "heart", path: "M12 21s-7-6.1-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 4.9-7 11-7 11Z" },
-  { key: "star", path: "M12 2.5l2.7 6 6.6.6-5 4.4 1.5 6.5-5.8-3.5-5.8 3.5 1.5-6.5-5-4.4 6.6-.6Z" },
-  { key: "moon", path: "M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" },
-  { key: "sun", path: "M12 5v-2M12 21v-2M5 12H3M21 12h-2M6.3 6.3 4.9 4.9M19.1 19.1l-1.4-1.4M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" },
-  {
-    key: "flower",
-    path:
-      "M8.9 7a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 M13.66 10.46a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 " +
-      "M11.84 16.04a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 M5.96 16.04a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 " +
-      "M4.14 10.46a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 M9.7 12a2.3 2.3 0 1 0 4.6 0a2.3 2.3 0 1 0 -4.6 0",
-  },
-  {
-    key: "clover",
-    path:
-      "M8.6 8a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 M12.6 12a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 " +
-      "M8.6 16a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 M4.6 12a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 M12 14L12 21",
-  },
-  {
-    key: "paw",
-    path:
-      "M7.8 16a4.2 3.4 0 1 0 8.4 0a4.2 3.4 0 1 0 -8.4 0 M5.6 10.2a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0 " +
-      "M8.5 7.6a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0 M12.1 7.6a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0 " +
-      "M15 10.2a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0",
-  },
-];
-
 const SERVICES = [
   {
     num: "01",
@@ -401,29 +374,19 @@ const STEPS = [
 export default function Home() {
   const [switchIdx, setSwitchIdx] = useState(0);
   const [kcText, setKcText] = useState("M2M");
-  const [kcIcons, setKcIcons] = useState([]);
   const [kcBase, setKcBase] = useState(11);
   const [kcCap, setKcCap] = useState(1);
 
-  const kcTokens = [
-    ...kcText.split("").map((c) => ({ type: "char", value: c })),
-    ...kcIcons.map((k) => ({ type: "icon", value: k })),
-  ];
+  const kcTokens = kcText.split("");
 
   function kcKeyPress() {
     playMechClick(SWITCH_LIB[switchIdx].variant);
   }
-  function kcAddIcon(key) {
-    kcKeyPress();
-    setKcIcons((prev) => [...prev, key]);
-  }
   function kcRemoveLast() {
-    if (kcIcons.length) setKcIcons((prev) => prev.slice(0, -1));
-    else setKcText((prev) => prev.slice(0, -1));
+    setKcText((prev) => prev.slice(0, -1));
   }
   function kcClear() {
     setKcText("");
-    setKcIcons([]);
   }
 
   useEffect(() => {
@@ -666,19 +629,13 @@ export default function Home() {
             ) : (
               <div className="kc-base" style={{ background: KEYCAP_COLORS[kcBase].hex }}>
                 <div className="kc-strip">
-                  {kcTokens.map((t, i) => (
+                  {kcTokens.map((c, i) => (
                     <span
                       className="keycap"
                       key={i}
                       style={{ background: KEYCAP_COLORS[kcCap].hex, color: KEYCAP_COLORS[kcCap].ink }}
                     >
-                      {t.type === "char" ? (
-                        t.value.toUpperCase()
-                      ) : (
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <path d={KEYCAP_ICONS.find((ic) => ic.key === t.value).path} />
-                        </svg>
-                      )}
+                      {c.toUpperCase()}
                     </span>
                   ))}
                 </div>
@@ -706,22 +663,6 @@ export default function Home() {
             <button type="button" className="kc-btn" onClick={kcClear}>
               Clear
             </button>
-          </div>
-
-          <div className="kc-icons">
-            {KEYCAP_ICONS.map((ic) => (
-              <button
-                type="button"
-                className="kc-icon-btn"
-                key={ic.key}
-                onClick={() => kcAddIcon(ic.key)}
-                aria-label={`Add ${ic.key} icon`}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d={ic.path} />
-                </svg>
-              </button>
-            ))}
           </div>
 
           <div className="kc-palette-row">
