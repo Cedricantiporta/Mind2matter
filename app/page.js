@@ -20,28 +20,28 @@ function getNoiseBuffer(ctx) {
   }
   return noiseBuffer;
 }
+// Tuned to match the four real switch-feel categories (clicky / tactile /
+// creamy linear / thocky linear): clicky is loud + double-tapped, tactile
+// is a quieter single bump, creamy is a near-whisper glide, thocky is a
+// low-noise but heavy, bass-forward press. Also reused directly by the
+// color swatches below (their `sound` field indexes into this array).
 const MECH_VARIANTS = [
-  { filter: "bandpass", freq: 3200, q: 6, dur: 0.02, noiseGain: 0.5, tone: 1800, toneGain: 0.12, double: true }, // blue — clicky
-  { filter: "bandpass", freq: 1600, q: 3, dur: 0.03, noiseGain: 0.35, tone: 320, toneGain: 0.18, double: false }, // brown — tactile
-  { filter: "lowpass", freq: 900, q: 1, dur: 0.045, noiseGain: 0.18, tone: 150, toneGain: 0.22, double: false }, // red — linear
-  { filter: "lowpass", freq: 600, q: 1, dur: 0.05, noiseGain: 0.22, tone: 105, toneGain: 0.26, double: false }, // black — heavy linear
-  { filter: "highpass", freq: 3800, q: 4, dur: 0.015, noiseGain: 0.55, tone: 2400, toneGain: 0.08, double: true }, // clear — stiff click
-  { filter: "lowpass", freq: 380, q: 0.8, dur: 0.055, noiseGain: 0.12, tone: 90, toneGain: 0.3, double: false }, // silent — creamy thump
-  { filter: "lowpass", freq: 220, q: 0.6, dur: 0.07, noiseGain: 0.1, tone: 65, toneGain: 0.34, double: false }, // topre — deep capacitive thock
-  { filter: "bandpass", freq: 2200, q: 8, dur: 0.018, noiseGain: 0.6, tone: 1400, toneGain: 0.14, double: true }, // buckling spring — vintage clack
+  { filter: "bandpass", freq: 3200, q: 6, dur: 0.02, noiseGain: 0.55, tone: 1800, toneGain: 0.12, double: true }, // 0 clicky
+  { filter: "bandpass", freq: 1600, q: 3, dur: 0.03, noiseGain: 0.3, tone: 320, toneGain: 0.2, double: false }, // 1 tactile
+  { filter: "lowpass", freq: 750, q: 1, dur: 0.05, noiseGain: 0.1, tone: 160, toneGain: 0.16, double: false }, // 2 creamy linear
+  { filter: "lowpass", freq: 240, q: 0.8, dur: 0.06, noiseGain: 0.2, tone: 95, toneGain: 0.32, double: false }, // 3 thocky linear
+  { filter: "lowpass", freq: 500, q: 0.9, dur: 0.055, noiseGain: 0.12, tone: 130, toneGain: 0.2, double: false }, // 4 bone white (swatch only)
+  { filter: "bandpass", freq: 2200, q: 8, dur: 0.018, noiseGain: 0.58, tone: 1400, toneGain: 0.14, double: true }, // 5 galaxy purple (swatch only)
 ];
 
-// Named real-world switch types a visitor can pick from, each mapped to one
-// of the synthesized MECH_VARIANTS above (index into that array).
+// The four switch-feel categories from the comparison chart, each mapped
+// to the synthesized MECH_VARIANTS tuning that best matches its
+// feel/sound/noise-level description.
 const SWITCH_LIB = [
-  { label: "Cherry MX Blue — Clicky", variant: 0 },
-  { label: "Cherry MX Brown — Tactile", variant: 1 },
-  { label: "Cherry MX Red — Linear", variant: 2 },
-  { label: "Cherry MX Black — Heavy Linear", variant: 3 },
-  { label: "Gateron Clear — Stiff Click", variant: 4 },
-  { label: "Gateron Yellow — Creamy Thock", variant: 5 },
-  { label: "Topre — Deep Thock", variant: 6 },
-  { label: "Buckling Spring — Vintage Clack", variant: 7 },
+  { label: "Clicky", variant: 0 },
+  { label: "Tactile", variant: 1 },
+  { label: "Creamy (Linear)", variant: 2 },
+  { label: "Thocky (Linear)", variant: 3 },
 ];
 const MASTER_VOLUME = 2.2;
 
@@ -258,6 +258,50 @@ const SWATCH_CLIPS = {
   sunny12: cookiePath(12, 0.44, 0.27, 0.5, 0.5),
 };
 
+// Build-your-own keycap keychain: pick a base (tile) color and an ink
+// (character) color, then type or click icons to lay out a custom set —
+// mirrors the "letters / numbers / special characters" swatch sheets
+// customers pick from for a real keycap order.
+const KEYCAP_COLORS = [
+  { name: "Black", hex: "#232019" },
+  { name: "Purple", hex: "#b7a4f5" },
+  { name: "Blue", hex: "#8fd8e0" },
+  { name: "Green", hex: "#b7d99a" },
+  { name: "Yellow", hex: "#f5df8a" },
+  { name: "Brown", hex: "#c9a27a" },
+  { name: "Pink", hex: "#f7bdd8" },
+  { name: "Orange", hex: "#f5a35c" },
+  { name: "Red", hex: "#e2483d" },
+  { name: "White", hex: "#efe9df" },
+];
+
+const KEYCAP_ICONS = [
+  { key: "heart", path: "M12 21s-7-6.1-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 4.9-7 11-7 11Z" },
+  { key: "star", path: "M12 2.5l2.7 6 6.6.6-5 4.4 1.5 6.5-5.8-3.5-5.8 3.5 1.5-6.5-5-4.4 6.6-.6Z" },
+  { key: "moon", path: "M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" },
+  { key: "sun", path: "M12 5v-2M12 21v-2M5 12H3M21 12h-2M6.3 6.3 4.9 4.9M19.1 19.1l-1.4-1.4M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" },
+  {
+    key: "flower",
+    path:
+      "M8.9 7a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 M13.66 10.46a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 " +
+      "M11.84 16.04a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 M5.96 16.04a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 " +
+      "M4.14 10.46a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0 M9.7 12a2.3 2.3 0 1 0 4.6 0a2.3 2.3 0 1 0 -4.6 0",
+  },
+  {
+    key: "clover",
+    path:
+      "M8.6 8a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 M12.6 12a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 " +
+      "M8.6 16a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 M4.6 12a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0 M12 14L12 21",
+  },
+  {
+    key: "paw",
+    path:
+      "M7.8 16a4.2 3.4 0 1 0 8.4 0a4.2 3.4 0 1 0 -8.4 0 M5.6 10.2a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0 " +
+      "M8.5 7.6a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0 M12.1 7.6a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0 " +
+      "M15 10.2a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0",
+  },
+];
+
 const SERVICES = [
   {
     num: "01",
@@ -347,6 +391,31 @@ const STEPS = [
 
 export default function Home() {
   const [switchIdx, setSwitchIdx] = useState(0);
+  const [kcText, setKcText] = useState("M2M");
+  const [kcIcons, setKcIcons] = useState([]);
+  const [kcBase, setKcBase] = useState(1);
+  const [kcCap, setKcCap] = useState(9);
+
+  const kcTokens = [
+    ...kcText.split("").map((c) => ({ type: "char", value: c })),
+    ...kcIcons.map((k) => ({ type: "icon", value: k })),
+  ];
+
+  function kcKeyPress() {
+    playMechClick(SWITCH_LIB[switchIdx].variant);
+  }
+  function kcAddIcon(key) {
+    kcKeyPress();
+    setKcIcons((prev) => [...prev, key]);
+  }
+  function kcRemoveLast() {
+    if (kcIcons.length) setKcIcons((prev) => prev.slice(0, -1));
+    else setKcText((prev) => prev.slice(0, -1));
+  }
+  function kcClear() {
+    setKcText("");
+    setKcIcons([]);
+  }
 
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -579,6 +648,111 @@ export default function Home() {
               ))}
             </defs>
           </svg>
+        </section>
+
+        <section id="customize">
+          <div className="sec-head reveal">
+            <div>
+              <h2>Design your own keycap keychain.</h2>
+            </div>
+            <p>Pick a base and ink color, then type or tap icons to lay out your own set.</p>
+          </div>
+
+          <div className="kc-preview reveal">
+            {kcTokens.length === 0 && <span className="kc-empty">Start typing below...</span>}
+            {kcTokens.map((t, i) => (
+              <span
+                className="keycap"
+                key={i}
+                style={{ background: KEYCAP_COLORS[kcBase].hex, color: KEYCAP_COLORS[kcCap].hex }}
+              >
+                {t.type === "char" ? (
+                  t.value.toUpperCase()
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d={KEYCAP_ICONS.find((ic) => ic.key === t.value).path} />
+                  </svg>
+                )}
+              </span>
+            ))}
+          </div>
+
+          <div className="kc-controls">
+            <input
+              type="text"
+              className="kc-input"
+              value={kcText}
+              maxLength={10}
+              placeholder="Type a name..."
+              autoComplete="off"
+              spellCheck="false"
+              onChange={(e) => {
+                kcKeyPress();
+                setKcText(e.target.value.replace(/[^a-zA-Z0-9 #$&@=;:?!%*+.,-]/g, ""));
+              }}
+            />
+            <button type="button" className="kc-btn" onClick={kcRemoveLast}>
+              Undo
+            </button>
+            <button type="button" className="kc-btn" onClick={kcClear}>
+              Clear
+            </button>
+          </div>
+
+          <div className="kc-icons">
+            {KEYCAP_ICONS.map((ic) => (
+              <button
+                type="button"
+                className="kc-icon-btn"
+                key={ic.key}
+                onClick={() => kcAddIcon(ic.key)}
+                aria-label={`Add ${ic.key} icon`}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={ic.path} />
+                </svg>
+              </button>
+            ))}
+          </div>
+
+          <div className="kc-palette-row">
+            <div className="kc-palette">
+              <span className="kc-palette-label">Base color</span>
+              <div className="kc-swatches">
+                {KEYCAP_COLORS.map((c, i) => (
+                  <button
+                    type="button"
+                    className={`kc-dot${i === kcBase ? " active" : ""}`}
+                    style={{ background: c.hex }}
+                    key={c.name}
+                    onClick={() => {
+                      kcKeyPress();
+                      setKcBase(i);
+                    }}
+                    aria-label={`Base color ${c.name}`}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="kc-palette">
+              <span className="kc-palette-label">Ink color</span>
+              <div className="kc-swatches">
+                {KEYCAP_COLORS.map((c, i) => (
+                  <button
+                    type="button"
+                    className={`kc-dot${i === kcCap ? " active" : ""}`}
+                    style={{ background: c.hex }}
+                    key={c.name}
+                    onClick={() => {
+                      kcKeyPress();
+                      setKcCap(i);
+                    }}
+                    aria-label={`Ink color ${c.name}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </section>
 
         <section id="about">
