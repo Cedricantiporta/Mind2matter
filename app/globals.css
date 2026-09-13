@@ -546,7 +546,7 @@ section {
 }
 .swatch-square {
   width: 86%;
-  margin: 7% auto 0;
+  margin: 7% auto;
 }
 .swatch-click {
   position: absolute;
