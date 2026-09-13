@@ -856,7 +856,7 @@ section {
   background: var(--cream);
   color: var(--ink);
   font-family: var(--font-unbounded);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   outline: none;
 }
