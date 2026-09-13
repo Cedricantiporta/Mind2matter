@@ -286,12 +286,12 @@ const KEYCAP_COLORS = [
   { name: "Silver", hex: "#b7ada0", ink: "#6b6155" },
 ];
 
-// One continuous outer frame path. GAP is 2x PAD so every key occupies an
-// exactly square cell (TILE + 2*PAD wide == TILE + 2*PAD tall) with the
-// same lip thickness on all four sides; adjacent cells share that lip.
+// One continuous outer frame path. Keep KC_GAP in sync with .kc-strip's
+// `gap` in globals.css -- both must match for the seam math below to line
+// up with the actual visual gap between keycaps.
 const KC_TILE = 66;
 const KC_PAD = 7;
-const KC_GAP = KC_PAD * 2; // square cells: pitch (TILE+GAP) == height (TILE+2*PAD)
+const KC_GAP = 8;
 const KC_KEY_R = 14; // matches .keycap border-radius
 const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness on the outer corners
 // Seam: a shallow concave scallop whose deepest point is ROUNDED, not
@@ -300,10 +300,10 @@ const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness on the outer corn
 // with a horizontal tangent (control points share the deepest point's y),
 // which is what rounds the bottom. Arcs can't do this: two arcs meeting
 // at depth have opposing vertical tangents, i.e. a sharp cusp.
-const KC_SEAM_D = 8; // depth of the scallop
-const KC_SEAM_W = 14; // half-width of the scallop
-const KC_SEAM_K1 = 7; // handle out of the flat edge (larger = softer entry)
-const KC_SEAM_K2 = 5; // handle at the bottom (larger = wider, flatter round)
+const KC_SEAM_D = 5; // depth of the scallop
+const KC_SEAM_W = 12; // half-width of the scallop
+const KC_SEAM_K1 = 5; // handle out of the flat edge (larger = softer entry)
+const KC_SEAM_K2 = 4; // handle at the bottom (larger = wider, flatter round)
 function kcBasePath(count) {
   const R = KC_OUTER_R;
   const D = KC_SEAM_D;
