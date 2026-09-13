@@ -157,14 +157,16 @@ const COOKIE_PATHS = {
   sunny12: cookiePath(12, 44, 27),
 };
 
+// Note: percentages are relative to the whole document height (decor-layer
+// spans the full page from <body>), not each section. Shapes that would
+// land over the "Pick a color" (colors, ~47-58%) and "Design your own
+// keycap" (customize, ~58-73%) sections are omitted so those two sections
+// stay free of floating shapes.
 const DECOR_SHAPES = [
   { top: "-8%", right: "-6%", size: 190, color: "var(--pastel-lilac)", cookie: "clover4", spin: 0.4 },
   { top: "-6%", left: "-8%", size: 190, color: "var(--pastel-pink)", cookie: "cookie7", spin: -0.45 },
   { top: "34%", left: "4%", size: 200, color: "var(--pastel-peach)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
   { top: "42%", right: "18%", size: 170, color: "var(--pastel-lilac)", cookie: "sunny12", spin: -0.7 },
-  { top: "48%", right: "5%", size: 140, color: "var(--pastel-pink)", cookie: "cookie9", spin: 1.1 },
-  { top: "60%", left: "6%", size: 110, color: "var(--pastel-lilac)", radius: "55% 45% 60% 40% / 45% 55% 45% 55%", spin: 0.8 },
-  { top: "72%", right: "8%", size: 160, color: "var(--pastel-peach)", cookie: "clover4", spin: -1.0 },
   { top: "82%", left: "3%", size: 220, color: "var(--pastel-pink)", cookie: "cookie7", spin: 0.6 },
   { top: "94%", right: "6%", size: 175, color: "var(--pastel-lilac)", cookie: "cookie6", spin: -0.65 },
 ];
@@ -292,12 +294,14 @@ const KEYCAP_COLORS = [
 // a curve instead of pinching at corners/seams when the offset radius is
 // left equal to the keycap's.
 const KC_TILE = 66;
-const KC_GAP = 5;
+const KC_GAP = 8;
 const KC_PAD = 7;
-const KC_KEY_R = 20; // matches .keycap border-radius
-const KC_OUTER_R = KC_KEY_R + KC_PAD;
+const KC_KEY_R = 14; // matches .keycap border-radius
+const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness on the true outer corners
+const KC_SEAM_R = KC_KEY_R; // seam notch stays as shallow as the keycap's own corner curve
 function kcBasePath(count) {
   const R = KC_OUTER_R;
+  const RS = KC_SEAM_R;
   const W = KC_PAD * 2 + count * KC_TILE + (count - 1) * KC_GAP;
   const H = KC_PAD * 2 + KC_TILE;
   const seams = [];
@@ -306,12 +310,12 @@ function kcBasePath(count) {
   }
   let d = `M ${R} 0 `;
   seams.forEach((sx) => {
-    d += `L ${sx - R} 0 A ${R} ${R} 0 0 1 ${sx} ${R} A ${R} ${R} 0 0 1 ${sx + R} 0 `;
+    d += `L ${sx - RS} 0 A ${RS} ${RS} 0 0 1 ${sx} ${RS} A ${RS} ${RS} 0 0 1 ${sx + RS} 0 `;
   });
   d += `L ${W - R} 0 A ${R} ${R} 0 0 1 ${W} ${R} `;
   d += `L ${W} ${H - R} A ${R} ${R} 0 0 1 ${W - R} ${H} `;
   [...seams].reverse().forEach((sx) => {
-    d += `L ${sx + R} ${H} A ${R} ${R} 0 0 1 ${sx} ${H - R} A ${R} ${R} 0 0 1 ${sx - R} ${H} `;
+    d += `L ${sx + RS} ${H} A ${RS} ${RS} 0 0 1 ${sx} ${H - RS} A ${RS} ${RS} 0 0 1 ${sx - RS} ${H} `;
   });
   d += `L ${R} ${H} A ${R} ${R} 0 0 1 0 ${H - R} `;
   d += `L 0 ${R} A ${R} ${R} 0 0 1 ${R} 0 Z`;
