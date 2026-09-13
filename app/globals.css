@@ -766,6 +766,7 @@ section {
 }
 .kc-base-wrap {
   position: relative;
+  flex-shrink: 0;
 }
 .kc-base-shape {
   position: absolute;
@@ -1157,11 +1158,6 @@ section {
   }
   .wrap {
     padding: 0 18px;
-  }
-}
-@media (max-width: 480px) {
-  .kc-base-wrap {
-    transform: scale(0.72);
   }
 }
 

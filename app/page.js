@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const FB_URL = "https://www.facebook.com/profile.php?id=61573794730980";
 const IG_URL = "https://instagram.com/mind2matterph";
@@ -437,6 +437,25 @@ export default function Home() {
   const kcTokens = kcText.split("");
   const kcBaseShape = kcTokens.length ? kcBasePath(kcTokens.length) : null;
 
+  // Measure the real, currently-rendered width of the preview area and
+  // shrink the keycap set to fit it exactly -- a fixed CSS breakpoint/scale
+  // guess can't account for every device's actual viewport, so this reads
+  // the true rendered size instead and never lets the set overflow it.
+  const kcPreviewRef = useRef(null);
+  const [kcScale, setKcScale] = useState(1);
+  useEffect(() => {
+    const el = kcPreviewRef.current;
+    if (!el || !kcBaseShape) return;
+    function recompute() {
+      const available = el.clientWidth;
+      const natural = kcBaseShape.width;
+      setKcScale(natural > available ? available / natural : 1);
+    }
+    recompute();
+    window.addEventListener("resize", recompute);
+    return () => window.removeEventListener("resize", recompute);
+  }, [kcBaseShape && kcBaseShape.width]);
+
   function kcKeyPress() {
     playMechClick(SWITCH_LIB[switchIdx].variant);
   }
@@ -651,11 +670,18 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="kc-preview">
+            <div className="kc-preview" ref={kcPreviewRef}>
               {kcTokens.length === 0 ? (
                 <span className="kc-empty">Start typing below...</span>
               ) : (
-                <div className="kc-base-wrap" style={{ width: kcBaseShape.width, height: kcBaseShape.height }}>
+                <div
+                  className="kc-base-wrap"
+                  style={{
+                    width: kcBaseShape.width,
+                    height: kcBaseShape.height,
+                    transform: kcScale < 1 ? `scale(${kcScale})` : undefined,
+                  }}
+                >
                   <svg
                     className="kc-base-shape"
                     width={kcBaseShape.width}
