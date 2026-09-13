@@ -258,28 +258,6 @@ const SWATCH_CLIPS = {
   sunny12: cookiePath(12, 0.44, 0.27, 0.5, 0.5),
 };
 
-// A rounded-square keycap outline whose left/right edges can carry a
-// concave "bite" where it meets a neighboring cap — so two adjacent caps
-// fuse into one strip with an inward-curving waist at the seam (the base
-// color shows through the lens-shaped gap) instead of a straight cut.
-function keycapPath(biteLeft, biteRight) {
-  const r = 0.22;
-  const br = 0.15;
-  const cy = 0.5;
-  let d = `M ${r} 0 L ${1 - r} 0 A ${r} ${r} 0 0 1 1 ${r} `;
-  d += biteRight ? `L 1 ${cy - br} A ${br} ${br} 0 0 0 1 ${cy + br} ` : "";
-  d += `L 1 ${1 - r} A ${r} ${r} 0 0 1 ${1 - r} 1 L ${r} 1 A ${r} ${r} 0 0 1 0 ${1 - r} `;
-  d += biteLeft ? `L 0 ${cy + br} A ${br} ${br} 0 0 0 0 ${cy - br} ` : "";
-  d += `L 0 ${r} A ${r} ${r} 0 0 1 ${r} 0 Z`;
-  return d;
-}
-const KEYCAP_SHAPE_CLIPS = {
-  single: keycapPath(false, false),
-  first: keycapPath(false, true),
-  middle: keycapPath(true, true),
-  last: keycapPath(true, false),
-};
-
 // Build-your-own keycap keychain: pick a base (tile) color and an ink
 // (character) color, then type or click icons to lay out a custom set —
 // mirrors the "letters / numbers / special characters" swatch sheets
@@ -692,38 +670,21 @@ export default function Home() {
             ) : (
               <div className="kc-base" style={{ background: KEYCAP_COLORS[kcBase].hex }}>
                 <div className="kc-strip">
-                  {kcTokens.map((t, i) => {
-                    const pos =
-                      kcTokens.length === 1 ? "single" : i === 0 ? "first" : i === kcTokens.length - 1 ? "last" : "middle";
-                    return (
-                      <span
-                        className="keycap"
-                        key={i}
-                        style={{ background: KEYCAP_COLORS[kcCap].hex, clipPath: `url(#kc-shape-${pos})` }}
-                      >
-                        {t.type === "char" ? (
-                          t.value.toUpperCase()
-                        ) : (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                            <path d={KEYCAP_ICONS.find((ic) => ic.key === t.value).path} />
-                          </svg>
-                        )}
-                      </span>
-                    );
-                  })}
+                  {kcTokens.map((t, i) => (
+                    <span className="keycap" key={i} style={{ background: KEYCAP_COLORS[kcCap].hex }}>
+                      {t.type === "char" ? (
+                        t.value.toUpperCase()
+                      ) : (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <path d={KEYCAP_ICONS.find((ic) => ic.key === t.value).path} />
+                        </svg>
+                      )}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
           </div>
-          <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-            <defs>
-              {Object.entries(KEYCAP_SHAPE_CLIPS).map(([name, d]) => (
-                <clipPath id={`kc-shape-${name}`} clipPathUnits="objectBoundingBox" key={name}>
-                  <path d={d} />
-                </clipPath>
-              ))}
-            </defs>
-          </svg>
 
           <div className="kc-controls">
             <input
