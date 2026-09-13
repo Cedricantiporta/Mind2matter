@@ -286,25 +286,23 @@ const KEYCAP_COLORS = [
   { name: "Silver", hex: "#b7ada0", ink: "#6b6155" },
 ];
 
-// Base geometry mirrors the keycap strip exactly (same tile size, gap and
-// padding as the .keycap/.kc-strip CSS below). The base outline is the
-// keycap outline offset outward by a uniform KC_PAD everywhere -- so its
-// corner/seam radius is the keycap's own radius PLUS that pad (concentric
-// offset), which is what keeps the lip the same width all the way around
-// a curve instead of pinching at corners/seams when the offset radius is
-// left equal to the keycap's.
+// Base geometry mirrors the keycap strip exactly (same tile size and gap
+// as the .keycap/.kc-strip CSS below), but the seam's own radius is an
+// independent, much larger value than the outer-corner radius. Circular
+// arcs narrow toward zero width as depth approaches the radius, so a big
+// RS (close to half the base height) makes the top notch and bottom
+// notch nearly meet in the middle -- one continuous curved waist with
+// no visible straight "stem" -- while GAP (the real keycap spacing)
+// stays untouched, since notch width is governed by RS alone.
 const KC_TILE = 66;
 const KC_GAP = 10;
 const KC_PAD = 7;
 const KC_KEY_R = 14; // matches .keycap border-radius
-const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness everywhere
-// The seam MUST use the same radius as the outer corners (not an
-// independent value) or the two curves aren't concentric: the lip
-// pinches to a sharp point at the bottom of the notch instead of
-// reading as one continuous curve. Same R everywhere = no seam.
+const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness on the true outer corners
+const KC_SEAM_R = 36; // ~H/2 (40); leaves only an 8px straight remainder
 function kcBasePath(count) {
   const R = KC_OUTER_R;
-  const RS = KC_OUTER_R;
+  const RS = KC_SEAM_R;
   const W = KC_PAD * 2 + count * KC_TILE + (count - 1) * KC_GAP;
   const H = KC_PAD * 2 + KC_TILE;
   const seams = [];

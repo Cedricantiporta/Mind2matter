@@ -774,6 +774,7 @@ section {
   gap: 10px;
 }
 .keycap {
+  position: relative;
   width: 66px;
   height: 66px;
   flex-shrink: 0;
@@ -788,9 +789,30 @@ section {
   letter-spacing: -0.02em;
   text-transform: uppercase;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 9px 11px -6px rgba(255, 255, 255, 0.4), inset 0 -9px 11px -6px rgba(0, 0, 0, 0.3),
-    inset 7px 0 10px -7px rgba(0, 0, 0, 0.16), inset -7px 0 10px -7px rgba(0, 0, 0, 0.16);
   transition: transform 0.1s ease;
+}
+/* Solid-color "thickness" ring, one flat tone per side (light top, dark
+   bottom, matching mid-tone left/right) with clean mitered corners --
+   a conic-gradient naturally splits into diagonal quadrant seams on a
+   square box, so the tones meet on a crisp 45deg line instead of a
+   blurred blend or a hard rectangular overlap. */
+.keycap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 5px;
+  background: conic-gradient(
+    from 315deg,
+    rgba(255, 255, 255, 0.38) 0deg 90deg,
+    rgba(0, 0, 0, 0.16) 90deg 180deg,
+    rgba(0, 0, 0, 0.3) 180deg 270deg,
+    rgba(0, 0, 0, 0.16) 270deg 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 .kc-controls {
   display: flex;
