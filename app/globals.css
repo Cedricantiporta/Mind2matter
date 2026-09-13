@@ -688,6 +688,11 @@ section {
 .swatch-bounce.swatch-rainbow {
   animation: swatchPop 0.32s ease, rainbowShift 3s linear forwards;
 }
+.kc-panel {
+  background: var(--card);
+  border-radius: 36px;
+  padding: 56px;
+}
 .type-tester {
   display: flex;
   flex-direction: column;
@@ -782,9 +787,9 @@ section {
   margin: 0;
   border-radius: 14px;
   border: 3px solid rgba(15, 10, 20, 0.6);
-  font-family: var(--font-railroad), var(--font-unbounded);
-  font-weight: 400;
-  font-size: 52px;
+  font-family: var(--font-unbounded);
+  font-weight: 800;
+  font-size: 44px;
   letter-spacing: -0.02em;
   text-transform: uppercase;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);

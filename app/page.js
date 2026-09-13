@@ -631,126 +631,128 @@ export default function Home() {
             <p>Pick a base and keycap color, then type or tap icons to lay out your own set.</p>
           </div>
 
-          <div className="type-tester reveal">
-            <span className="type-tester-label">Type to hear the switches</span>
-            <div className="switch-pills" role="group" aria-label="Pick a switch type">
-              {SWITCH_LIB.map((sw, i) => (
-                <button
-                  type="button"
-                  key={sw.label}
-                  className={`switch-pill${i === switchIdx ? " active" : ""}`}
-                  onClick={() => {
-                    setSwitchIdx(i);
-                    playMechClick(sw.variant);
-                  }}
-                >
-                  {sw.label}
-                </button>
-              ))}
+          <div className="kc-panel reveal">
+            <div className="type-tester">
+              <span className="type-tester-label">Type to hear the switches</span>
+              <div className="switch-pills" role="group" aria-label="Pick a switch type">
+                {SWITCH_LIB.map((sw, i) => (
+                  <button
+                    type="button"
+                    key={sw.label}
+                    className={`switch-pill${i === switchIdx ? " active" : ""}`}
+                    onClick={() => {
+                      setSwitchIdx(i);
+                      playMechClick(sw.variant);
+                    }}
+                  >
+                    {sw.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="kc-preview reveal">
-            {kcTokens.length === 0 ? (
-              <span className="kc-empty">Start typing below...</span>
-            ) : (
-              <div className="kc-base-wrap" style={{ width: kcBaseShape.width, height: kcBaseShape.height }}>
-                <svg
-                  className="kc-base-shape"
-                  width={kcBaseShape.width}
-                  height={kcBaseShape.height}
-                  style={{ overflow: "visible" }}
-                  aria-hidden="true"
-                >
-                  <path
-                    d={kcBaseShape.d}
-                    fill={darkenHex(KEYCAP_COLORS[kcBase].hex, 0.16)}
-                    transform="translate(0, 5)"
-                  />
-                  <path d={kcBaseShape.d} fill={KEYCAP_COLORS[kcBase].hex} />
-                </svg>
-                <div className="kc-strip">
-                  {kcTokens.map((c, i) => (
+            <div className="kc-preview">
+              {kcTokens.length === 0 ? (
+                <span className="kc-empty">Start typing below...</span>
+              ) : (
+                <div className="kc-base-wrap" style={{ width: kcBaseShape.width, height: kcBaseShape.height }}>
+                  <svg
+                    className="kc-base-shape"
+                    width={kcBaseShape.width}
+                    height={kcBaseShape.height}
+                    style={{ overflow: "visible" }}
+                    aria-hidden="true"
+                  >
+                    <path
+                      d={kcBaseShape.d}
+                      fill={darkenHex(KEYCAP_COLORS[kcBase].hex, 0.16)}
+                      transform="translate(0, 5)"
+                    />
+                    <path d={kcBaseShape.d} fill={KEYCAP_COLORS[kcBase].hex} />
+                  </svg>
+                  <div className="kc-strip">
+                    {kcTokens.map((c, i) => (
+                      <button
+                        type="button"
+                        className="keycap"
+                        key={i}
+                        style={{ background: KEYCAP_COLORS[kcCap].hex, color: KEYCAP_COLORS[kcCap].ink }}
+                        onClick={handleKeycapClick}
+                        aria-label={`Key ${c.toUpperCase()}: click for a mechanical-switch click sound`}
+                      >
+                        {c.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="kc-controls">
+              <input
+                type="text"
+                className="kc-input"
+                value={kcText}
+                maxLength={5}
+                placeholder="Type a name..."
+                autoComplete="off"
+                spellCheck="false"
+                onChange={(e) => {
+                  kcKeyPress();
+                  setKcText(e.target.value.replace(/[^a-zA-Z0-9 #$&@=;:?!%*+.,-]/g, ""));
+                }}
+              />
+              <button type="button" className="kc-btn" onClick={kcRemoveLast}>
+                Undo
+              </button>
+              <button type="button" className="kc-btn" onClick={kcClear}>
+                Clear
+              </button>
+            </div>
+
+            <div className="kc-palette-row">
+              <div className="kc-palette">
+                <span className="kc-palette-label">Base color</span>
+                <div className="kc-swatches">
+                  {KEYCAP_COLORS.map((c, i) => (
                     <button
                       type="button"
-                      className="keycap"
-                      key={i}
-                      style={{ background: KEYCAP_COLORS[kcCap].hex, color: KEYCAP_COLORS[kcCap].ink }}
-                      onClick={handleKeycapClick}
-                      aria-label={`Key ${c.toUpperCase()}: click for a mechanical-switch click sound`}
-                    >
-                      {c.toUpperCase()}
-                    </button>
+                      className={`kc-dot${i === kcBase ? " active" : ""}`}
+                      style={{ background: c.hex }}
+                      key={c.name}
+                      onClick={() => {
+                        kcKeyPress();
+                        setKcBase(i);
+                      }}
+                      aria-label={`Base color ${c.name}`}
+                    />
                   ))}
                 </div>
               </div>
-            )}
-          </div>
-
-          <div className="kc-controls">
-            <input
-              type="text"
-              className="kc-input"
-              value={kcText}
-              maxLength={5}
-              placeholder="Type a name..."
-              autoComplete="off"
-              spellCheck="false"
-              onChange={(e) => {
-                kcKeyPress();
-                setKcText(e.target.value.replace(/[^a-zA-Z0-9 #$&@=;:?!%*+.,-]/g, ""));
-              }}
-            />
-            <button type="button" className="kc-btn" onClick={kcRemoveLast}>
-              Undo
-            </button>
-            <button type="button" className="kc-btn" onClick={kcClear}>
-              Clear
-            </button>
-          </div>
-
-          <div className="kc-palette-row">
-            <div className="kc-palette">
-              <span className="kc-palette-label">Base color</span>
-              <div className="kc-swatches">
-                {KEYCAP_COLORS.map((c, i) => (
-                  <button
-                    type="button"
-                    className={`kc-dot${i === kcBase ? " active" : ""}`}
-                    style={{ background: c.hex }}
-                    key={c.name}
-                    onClick={() => {
-                      kcKeyPress();
-                      setKcBase(i);
-                    }}
-                    aria-label={`Base color ${c.name}`}
-                  />
-                ))}
+              <div className="kc-palette">
+                <span className="kc-palette-label">Keycap color</span>
+                <div className="kc-swatches">
+                  {KEYCAP_COLORS.map((c, i) => (
+                    <button
+                      type="button"
+                      className={`kc-dot${i === kcCap ? " active" : ""}`}
+                      style={{ background: c.hex }}
+                      key={c.name}
+                      onClick={() => {
+                        kcKeyPress();
+                        setKcCap(i);
+                      }}
+                      aria-label={`Keycap color ${c.name}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="kc-palette">
-              <span className="kc-palette-label">Keycap color</span>
-              <div className="kc-swatches">
-                {KEYCAP_COLORS.map((c, i) => (
-                  <button
-                    type="button"
-                    className={`kc-dot${i === kcCap ? " active" : ""}`}
-                    style={{ background: c.hex }}
-                    key={c.name}
-                    onClick={() => {
-                      kcKeyPress();
-                      setKcCap(i);
-                    }}
-                    aria-label={`Keycap color ${c.name}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
 
-          <a className="kc-send-btn" href={FB_URL} target="_blank" rel="noopener">
-            Send My Design
-          </a>
+            <a className="kc-send-btn" href={FB_URL} target="_blank" rel="noopener">
+              Send My Design
+            </a>
+          </div>
         </section>
 
         <section id="about">
