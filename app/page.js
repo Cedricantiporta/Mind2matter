@@ -285,15 +285,17 @@ const KEYCAP_COLORS = [
 ];
 
 // Base geometry mirrors the keycap strip exactly (same tile size, gap and
-// padding as the .keycap/.kc-strip CSS below). Each seam is a smooth,
-// tangent-continuous "waist" built from two concave fillets that use the
-// SAME radius as the keycap's own corner radius (KC_OUTER_R === the
-// .keycap border-radius), so the seam curve reads as the same curve size
-// as the keycaps themselves instead of a sharper, mismatched notch.
+// padding as the .keycap/.kc-strip CSS below). The base outline is the
+// keycap outline offset outward by a uniform KC_PAD everywhere -- so its
+// corner/seam radius is the keycap's own radius PLUS that pad (concentric
+// offset), which is what keeps the lip the same width all the way around
+// a curve instead of pinching at corners/seams when the offset radius is
+// left equal to the keycap's.
 const KC_TILE = 66;
 const KC_GAP = 5;
 const KC_PAD = 7;
-const KC_OUTER_R = 20;
+const KC_KEY_R = 20; // matches .keycap border-radius
+const KC_OUTER_R = KC_KEY_R + KC_PAD;
 function kcBasePath(count) {
   const R = KC_OUTER_R;
   const W = KC_PAD * 2 + count * KC_TILE + (count - 1) * KC_GAP;
@@ -662,16 +664,7 @@ export default function Home() {
             ) : (
               <div className="kc-base-wrap" style={{ width: kcBaseShape.width, height: kcBaseShape.height }}>
                 <svg className="kc-base-shape" width={kcBaseShape.width} height={kcBaseShape.height} aria-hidden="true">
-                  <defs>
-                    <linearGradient id="kc-base-grad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0" stopColor="#fff" stopOpacity="0.3" />
-                      <stop offset="0.18" stopColor="#fff" stopOpacity="0" />
-                      <stop offset="0.82" stopColor="#000" stopOpacity="0" />
-                      <stop offset="1" stopColor="#000" stopOpacity="0.24" />
-                    </linearGradient>
-                  </defs>
                   <path d={kcBaseShape.d} fill={KEYCAP_COLORS[kcBase].hex} />
-                  <path d={kcBaseShape.d} fill="url(#kc-base-grad)" />
                 </svg>
                 <div className="kc-strip">
                   {kcTokens.map((c, i) => (
