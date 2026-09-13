@@ -286,19 +286,30 @@ const KEYCAP_COLORS = [
   { name: "Silver", hex: "#b7ada0", ink: "#6b6155" },
 ];
 
-// Matches the reference photo: keycaps sit close together (small gap),
-// connected by a base with a shallow, gentle scalloped valley at each
-// seam -- not a deep funnel. Seam radius stays concentric with the
-// outer-corner radius so the lip is the same width all the way around
-// (no pinch), and the gap between keycaps is tight.
+// One continuous outer frame path. GAP is 2x PAD so every key occupies an
+// exactly square cell (TILE + 2*PAD wide == TILE + 2*PAD tall) with the
+// same lip thickness on all four sides; adjacent cells share that lip.
 const KC_TILE = 66;
-const KC_GAP = 8;
 const KC_PAD = 7;
+const KC_GAP = KC_PAD * 2; // square cells: pitch (TILE+GAP) == height (TILE+2*PAD)
 const KC_KEY_R = 14; // matches .keycap border-radius
-const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness everywhere
+const KC_OUTER_R = KC_KEY_R + KC_PAD; // uniform lip thickness on the outer corners
+// Seam: a shallow concave scallop whose deepest point is ROUNDED, not
+// pointed. Two cubic Beziers per seam -- the first eases down out of the
+// flat frame edge, the second eases back up, and both meet at the bottom
+// with a horizontal tangent (control points share the deepest point's y),
+// which is what rounds the bottom. Arcs can't do this: two arcs meeting
+// at depth have opposing vertical tangents, i.e. a sharp cusp.
+const KC_SEAM_D = 8; // depth of the scallop
+const KC_SEAM_W = 14; // half-width of the scallop
+const KC_SEAM_K1 = 7; // handle out of the flat edge (larger = softer entry)
+const KC_SEAM_K2 = 5; // handle at the bottom (larger = wider, flatter round)
 function kcBasePath(count) {
   const R = KC_OUTER_R;
-  const RS = KC_OUTER_R;
+  const D = KC_SEAM_D;
+  const SW = KC_SEAM_W;
+  const k1 = KC_SEAM_K1;
+  const k2 = KC_SEAM_K2;
   const W = KC_PAD * 2 + count * KC_TILE + (count - 1) * KC_GAP;
   const H = KC_PAD * 2 + KC_TILE;
   const seams = [];
@@ -307,12 +318,16 @@ function kcBasePath(count) {
   }
   let d = `M ${R} 0 `;
   seams.forEach((sx) => {
-    d += `L ${sx - RS} 0 A ${RS} ${RS} 0 0 1 ${sx} ${RS} A ${RS} ${RS} 0 0 1 ${sx + RS} 0 `;
+    d += `L ${sx - SW} 0 `;
+    d += `C ${sx - SW + k1} 0, ${sx - k2} ${D}, ${sx} ${D} `;
+    d += `C ${sx + k2} ${D}, ${sx + SW - k1} 0, ${sx + SW} 0 `;
   });
   d += `L ${W - R} 0 A ${R} ${R} 0 0 1 ${W} ${R} `;
   d += `L ${W} ${H - R} A ${R} ${R} 0 0 1 ${W - R} ${H} `;
   [...seams].reverse().forEach((sx) => {
-    d += `L ${sx + RS} ${H} A ${RS} ${RS} 0 0 1 ${sx} ${H - RS} A ${RS} ${RS} 0 0 1 ${sx - RS} ${H} `;
+    d += `L ${sx + SW} ${H} `;
+    d += `C ${sx + SW - k1} ${H}, ${sx + k2} ${H - D}, ${sx} ${H - D} `;
+    d += `C ${sx - k2} ${H - D}, ${sx - SW + k1} ${H}, ${sx - SW} ${H} `;
   });
   d += `L ${R} ${H} A ${R} ${R} 0 0 1 0 ${H - R} `;
   d += `L 0 ${R} A ${R} ${R} 0 0 1 ${R} 0 Z`;

@@ -771,7 +771,7 @@ section {
   position: absolute;
   inset: 7px;
   display: flex;
-  gap: 8px;
+  gap: 14px; /* == 2 * the 7px lip, so each key cell is square */
 }
 .keycap {
   position: relative;
