@@ -5,38 +5,73 @@ import { useEffect } from "react";
 const FB_URL = "https://www.facebook.com/profile.php?id=61573794730980";
 const IG_URL = "https://instagram.com/mind2matterph";
 
+// Synthesized mechanical-keyboard switch sounds: a filtered noise burst (the
+// "click" transient) layered with a short tonal thump, tuned per variant to
+// evoke a distinct real switch type (clicky/tactile/linear/etc). No sample
+// files needed, so nothing to license — six clearly different characters.
 let audioCtx;
-const CLICK_VARIANTS = [
-  { type: "square", from: 1700, to: 320, gain: 0.22 },
-  { type: "sawtooth", from: 1300, to: 240, gain: 0.18 },
-  { type: "sine", from: 1000, to: 180, gain: 0.26 },
+let noiseBuffer;
+function getNoiseBuffer(ctx) {
+  if (!noiseBuffer) {
+    const len = Math.floor(ctx.sampleRate * 0.05);
+    noiseBuffer = ctx.createBuffer(1, len, ctx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+  }
+  return noiseBuffer;
+}
+const MECH_VARIANTS = [
+  { filter: "bandpass", freq: 3200, q: 6, dur: 0.02, noiseGain: 0.5, tone: 1800, toneGain: 0.12, double: true }, // blue — clicky
+  { filter: "bandpass", freq: 1600, q: 3, dur: 0.03, noiseGain: 0.35, tone: 320, toneGain: 0.18, double: false }, // brown — tactile
+  { filter: "lowpass", freq: 900, q: 1, dur: 0.045, noiseGain: 0.18, tone: 150, toneGain: 0.22, double: false }, // red — linear
+  { filter: "lowpass", freq: 600, q: 1, dur: 0.05, noiseGain: 0.22, tone: 105, toneGain: 0.26, double: false }, // black — heavy linear
+  { filter: "highpass", freq: 3800, q: 4, dur: 0.015, noiseGain: 0.55, tone: 2400, toneGain: 0.08, double: true }, // clear — stiff click
+  { filter: "lowpass", freq: 380, q: 0.8, dur: 0.055, noiseGain: 0.12, tone: 90, toneGain: 0.3, double: false }, // silent — creamy thump
 ];
-function playClickSound(variant = 0) {
+function fireClickBurst(ctx, v, when) {
+  const noise = ctx.createBufferSource();
+  noise.buffer = getNoiseBuffer(ctx);
+  const filt = ctx.createBiquadFilter();
+  filt.type = v.filter;
+  filt.frequency.value = v.freq;
+  filt.Q.value = v.q;
+  const ng = ctx.createGain();
+  ng.gain.setValueAtTime(v.noiseGain, when);
+  ng.gain.exponentialRampToValueAtTime(0.001, when + v.dur);
+  noise.connect(filt).connect(ng).connect(ctx.destination);
+  noise.start(when);
+  noise.stop(when + v.dur + 0.01);
+
+  const osc = ctx.createOscillator();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(v.tone, when);
+  const og = ctx.createGain();
+  og.gain.setValueAtTime(v.toneGain, when);
+  og.gain.exponentialRampToValueAtTime(0.001, when + v.dur * 1.4);
+  osc.connect(og).connect(ctx.destination);
+  osc.start(when);
+  osc.stop(when + v.dur * 1.5 + 0.01);
+}
+function playMechClick(variant = 0) {
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
   if (!AudioCtx) return;
   if (!audioCtx) audioCtx = new AudioCtx();
   if (audioCtx.state === "suspended") audioCtx.resume();
-
-  const v = CLICK_VARIANTS[variant % CLICK_VARIANTS.length];
+  const v = MECH_VARIANTS[variant % MECH_VARIANTS.length];
   const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = v.type;
-  osc.frequency.setValueAtTime(v.from, now);
-  osc.frequency.exponentialRampToValueAtTime(v.to, now + 0.035);
-  gain.gain.setValueAtTime(v.gain, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-  osc.connect(gain).connect(audioCtx.destination);
-  osc.start(now);
-  osc.stop(now + 0.06);
+  fireClickBurst(audioCtx, v, now);
+  if (v.double) {
+    fireClickBurst(audioCtx, { ...v, noiseGain: v.noiseGain * 0.6, toneGain: v.toneGain * 0.6 }, now + 0.014);
+  }
 }
 
-function handleSwatchClick(e, variant) {
-  playClickSound(variant);
+function handleSwatchClick(e, variant, effect) {
+  playMechClick(variant);
   const el = e.currentTarget;
-  el.classList.remove("swatch-bounce");
+  const cls = effect === "rotate" ? "swatch-spin" : "swatch-bounce";
+  el.classList.remove("swatch-spin", "swatch-bounce");
   void el.offsetWidth;
-  el.classList.add("swatch-bounce");
+  el.classList.add(cls);
 }
 
 function LogoMark() {
@@ -77,19 +112,23 @@ const COOKIE_PATHS = {
 };
 
 const DECOR_SHAPES = [
-  // hero — bold and plentiful
-  { top: "-8%", right: "-6%", size: 300, color: "var(--pastel-lilac)", cookie: "clover4", spin: 0.4 },
-  { top: "3%", left: "24%", size: 170, color: "var(--pastel-peach)", cookie: "sunny12", spin: -0.7 },
-  { top: "9%", right: "28%", size: 190, color: "var(--pastel-pink)", cookie: "cookie6", spin: 1.3 },
-  { top: "-6%", left: "-8%", size: 260, color: "var(--pastel-pink)", cookie: "cookie7", spin: -0.45 },
-  { top: "20%", right: "22%", size: 230, color: "var(--pastel-lilac)", cookie: "cookie9", spin: 0.9 },
-  // rest of the page
+  { top: "-8%", right: "-6%", size: 190, color: "var(--pastel-lilac)", cookie: "clover4", spin: 0.4 },
+  { top: "-6%", left: "-8%", size: 190, color: "var(--pastel-pink)", cookie: "cookie7", spin: -0.45 },
   { top: "34%", left: "4%", size: 200, color: "var(--pastel-peach)", radius: "48% 52% 38% 62% / 60% 42% 58% 40%", spin: -0.5 },
+  { top: "42%", right: "18%", size: 170, color: "var(--pastel-lilac)", cookie: "sunny12", spin: -0.7 },
   { top: "48%", right: "5%", size: 140, color: "var(--pastel-pink)", cookie: "cookie9", spin: 1.1 },
   { top: "60%", left: "6%", size: 175, color: "var(--pastel-lilac)", radius: "55% 45% 60% 40% / 45% 55% 45% 55%", spin: 0.8 },
   { top: "72%", right: "8%", size: 160, color: "var(--pastel-peach)", cookie: "clover4", spin: -1.0 },
   { top: "82%", left: "3%", size: 220, color: "var(--pastel-pink)", cookie: "cookie7", spin: 0.6 },
   { top: "94%", right: "6%", size: 175, color: "var(--pastel-lilac)", cookie: "cookie6", spin: -0.65 },
+];
+
+// Sit inside .hero-art itself, in DOM order before the mascot image, so they
+// tuck naturally behind the cat (normal stacking) without needing any
+// pointer-events overrides on ancestor sections.
+const MASCOT_SHAPES = [
+  { top: "2%", left: "-2%", size: 210, color: "var(--pastel-pink)", cookie: "cookie6", spin: 1.3 },
+  { top: "58%", right: "-10%", size: 240, color: "var(--pastel-lilac)", cookie: "cookie9", spin: 0.9 },
 ];
 
 function handleShapeClick(e, spin) {
@@ -103,49 +142,44 @@ function handleShapeClick(e, spin) {
   }, 2200);
 }
 
+function Shape({ s }) {
+  const spinStyle = {
+    animationDuration: `${(26 / Math.abs(s.spin)).toFixed(1)}s`,
+    animationDirection: s.spin < 0 ? "reverse" : "normal",
+  };
+  return s.cookie ? (
+    <svg
+      viewBox="0 0 100 100"
+      className="decor-shape"
+      onClick={(e) => handleShapeClick(e, s.spin)}
+      style={{ top: s.top, left: s.left, right: s.right, width: s.size, height: s.size, ...spinStyle }}
+    >
+      <path d={COOKIE_PATHS[s.cookie]} fill={s.color} />
+    </svg>
+  ) : (
+    <div
+      className="decor-shape"
+      onClick={(e) => handleShapeClick(e, s.spin)}
+      style={{
+        top: s.top,
+        left: s.left,
+        right: s.right,
+        width: s.size,
+        height: s.size,
+        background: s.color,
+        borderRadius: s.radius,
+        ...spinStyle,
+      }}
+    />
+  );
+}
+
 function DecorShapes() {
   return (
     <div className="decor-layer" aria-hidden="true">
-      {DECOR_SHAPES.map((s, i) => {
-        const spinStyle = {
-          animationDuration: `${(26 / Math.abs(s.spin)).toFixed(1)}s`,
-          animationDirection: s.spin < 0 ? "reverse" : "normal",
-        };
-        return s.cookie ? (
-          <svg
-            key={i}
-            viewBox="0 0 100 100"
-            className="decor-shape"
-            onClick={(e) => handleShapeClick(e, s.spin)}
-            style={{
-              top: s.top,
-              left: s.left,
-              right: s.right,
-              width: s.size,
-              height: s.size,
-              ...spinStyle,
-            }}
-          >
-            <path d={COOKIE_PATHS[s.cookie]} fill={s.color} />
-          </svg>
-        ) : (
-          <div
-            key={i}
-            className="decor-shape"
-            onClick={(e) => handleShapeClick(e, s.spin)}
-            style={{
-              top: s.top,
-              left: s.left,
-              right: s.right,
-              width: s.size,
-              height: s.size,
-              background: s.color,
-              borderRadius: s.radius,
-              ...spinStyle,
-            }}
-          />
-        );
-      })}
+      {DECOR_SHAPES.map((s, i) => (
+        <Shape s={s} key={i} />
+      ))}
     </div>
   );
 }
@@ -159,13 +193,23 @@ function FacebookIcon() {
 }
 
 const SWATCHES = [
-  { bg: "#ff5a1f", label: "PLA Orange" },
-  { bg: "#0f8b8d", label: "Deep Teal" },
-  { bg: "#191410", label: "Matte Black" },
-  { bg: "#ffc93c", label: "Sunbeam Gold" },
-  { bg: "#e7e0d2", label: "Bone White" },
-  { bg: "#7c5cff", label: "Galaxy Purple" },
+  { bg: "#ff5a1f", label: "PLA Orange", shape: "square", effect: "bounce", sound: 0 },
+  { bg: "#0f8b8d", label: "Deep Teal", shape: "cookie6", effect: "rotate", sound: 1 },
+  { bg: "#191410", label: "Matte Black", shape: "clover4", effect: "bounce", sound: 2 },
+  { bg: "#ffc93c", label: "Sunbeam Gold", shape: "cookie7", effect: "rotate", sound: 3 },
+  { bg: "#e7e0d2", label: "Bone White", shape: "cookie9", effect: "bounce", sound: 4 },
+  { bg: "#7c5cff", label: "Galaxy Purple", shape: "sunny12", effect: "rotate", sound: 5 },
 ];
+// Normalized (objectBoundingBox, 0-1) versions of the cookie shapes for use
+// as <clipPath> on the swatch buttons, so they scale with the button's own
+// responsive size instead of a fixed pixel path.
+const SWATCH_CLIPS = {
+  cookie6: cookiePath(6, 0.44, 0.33, 0.5, 0.5),
+  clover4: cookiePath(4, 0.47, 0.18, 0.5, 0.5),
+  cookie7: cookiePath(7, 0.43, 0.34, 0.5, 0.5),
+  cookie9: cookiePath(9, 0.42, 0.35, 0.5, 0.5),
+  sunny12: cookiePath(12, 0.44, 0.27, 0.5, 0.5),
+};
 
 const SERVICES = [
   {
@@ -206,7 +250,7 @@ const SERVICES = [
   },
   {
     num: "04",
-    cls: "bg-orange",
+    cls: "bg-pink",
     title: "Prototyping",
     desc: "Iterate fast on functional parts before you commit to production.",
     icon: (
@@ -217,7 +261,7 @@ const SERVICES = [
   },
   {
     num: "05",
-    cls: "bg-teal",
+    cls: "bg-lilac",
     title: "Personalized Gifts",
     desc: "Birthdays, giveaways, souvenirs: one-off pieces made for the occasion.",
     icon: (
@@ -232,7 +276,7 @@ const SERVICES = [
   },
   {
     num: "06",
-    cls: "bg-gold",
+    cls: "bg-peach",
     title: "Cosplay & Props",
     desc: "Armor bits, badges, and props printed to hold up under a full con day.",
     icon: (
@@ -299,9 +343,9 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="wrap">
+      <main className="wrap hero-main">
         <section className="hero">
-          <div>
+          <div className="hero-copy">
             <h1>
               Where Ideas
               <br />
@@ -364,6 +408,9 @@ export default function Home() {
 
           <div className="hero-art">
             <div className="mascot-glow" />
+            {MASCOT_SHAPES.map((s, i) => (
+              <Shape s={s} key={i} />
+            ))}
             <div className="mascot-wrap">
               <img src="/mascot.png" alt="Mind2Matter mascot" className="mascot-img" />
             </div>
@@ -429,14 +476,17 @@ export default function Home() {
             <p>A running sample of finishes we keep in stock. More shades available on request.</p>
           </div>
           <div className="swatch-grid">
-            {SWATCHES.map((sw, i) => (
+            {SWATCHES.map((sw) => (
               <div className="swatch-item reveal" key={sw.label}>
                 <button
                   type="button"
                   className="swatch"
-                  style={{ background: sw.bg }}
-                  onClick={(e) => handleSwatchClick(e, Math.floor(i / 2))}
-                  aria-label={`${sw.label}: click for a tactile click sound`}
+                  style={{
+                    background: sw.bg,
+                    clipPath: sw.shape === "square" ? undefined : `url(#swatch-clip-${sw.shape})`,
+                  }}
+                  onClick={(e) => handleSwatchClick(e, sw.sound, sw.effect)}
+                  aria-label={`${sw.label}: click for a mechanical-switch click sound`}
                 >
                   <span className="swatch-click">Click Me</span>
                 </button>
@@ -444,6 +494,15 @@ export default function Home() {
               </div>
             ))}
           </div>
+          <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+            <defs>
+              {Object.entries(SWATCH_CLIPS).map(([name, d]) => (
+                <clipPath id={`swatch-clip-${name}`} clipPathUnits="objectBoundingBox" key={name}>
+                  <path d={d} />
+                </clipPath>
+              ))}
+            </defs>
+          </svg>
         </section>
 
         <section id="about">

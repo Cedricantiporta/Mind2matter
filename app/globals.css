@@ -171,6 +171,13 @@ nav.links a:hover {
   background: var(--teal);
   box-shadow: 0 0 0 4px rgba(15, 139, 141, 0.15);
 }
+.hero-main {
+  pointer-events: none;
+}
+.hero-main .btn,
+.hero-main .decor-shape {
+  pointer-events: auto;
+}
 .hero h1 {
   font-size: clamp(42px, 5.6vw, 84px);
   line-height: 0.98;
@@ -224,13 +231,12 @@ nav.links a:hover {
   box-shadow: 0 10px 22px rgba(255, 156, 199, 0.45);
 }
 .btn-outline {
-  border: 2px solid var(--ink);
+  background: var(--pastel-teal);
   color: var(--ink);
 }
 .btn-outline:hover {
   transform: translateY(-3px);
-  background: var(--cta);
-  border-color: var(--cta);
+  background: var(--teal);
   color: var(--ink);
 }
 .feat-row {
@@ -267,7 +273,6 @@ nav.links a:hover {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  pointer-events: none;
 }
 .mascot-wrap {
   position: relative;
@@ -278,7 +283,7 @@ nav.links a:hover {
   width: 100%;
   height: auto;
   filter: drop-shadow(0 30px 34px rgba(25, 20, 16, 0.18));
-  animation: float 6s ease-in-out infinite;
+  animation: float 5s ease-in-out infinite;
 }
 @keyframes float {
   0%,
@@ -286,7 +291,7 @@ nav.links a:hover {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-16px);
   }
 }
 .mascot-glow {
@@ -427,6 +432,18 @@ section {
   background: var(--pastel-gold);
   color: var(--ink);
 }
+.bg-pink {
+  background: var(--pastel-pink);
+  color: var(--ink);
+}
+.bg-lilac {
+  background: var(--pastel-lilac);
+  color: var(--ink);
+}
+.bg-peach {
+  background: var(--pastel-peach);
+  color: var(--ink);
+}
 
 /* ---------- PROCESS ---------- */
 .process {
@@ -554,6 +571,20 @@ section {
   }
   100% {
     transform: scale(1);
+  }
+}
+.swatch-spin {
+  animation: swatchSpin 0.55s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+@keyframes swatchSpin {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  60% {
+    transform: rotate(300deg) scale(1.08);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
   }
 }
 .swatch-label {
