@@ -259,34 +259,6 @@ nav.links a:hover {
   justify-content: center;
   align-items: flex-end;
 }
-.hero-art .float-badge {
-  position: absolute;
-  top: 6%;
-  left: 0;
-  background: var(--gold);
-  border-radius: 16px;
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-14deg);
-  box-shadow: 0 10px 20px rgba(255, 201, 60, 0.35);
-  animation: bob 4s ease-in-out infinite;
-}
-.hero-art .float-badge svg {
-  width: 34px;
-  height: 34px;
-}
-@keyframes bob {
-  0%,
-  100% {
-    transform: rotate(-14deg) translateY(0);
-  }
-  50% {
-    transform: rotate(-8deg) translateY(-10px);
-  }
-}
 .mascot-wrap {
   position: relative;
   width: 100%;
@@ -400,17 +372,15 @@ section {
 }
 .service-card {
   background: var(--card);
-  border: 1.5px solid var(--line);
   border-radius: var(--radius);
   padding: 30px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 .service-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 16px 34px rgba(25, 20, 16, 0.1);
-  border-color: var(--orange);
 }
 .service-icon {
   width: 52px;
@@ -455,18 +425,6 @@ section {
   border-radius: 40px;
   position: relative;
   overflow: hidden;
-}
-.process::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(246, 239, 226, 0.05) 0px,
-    rgba(246, 239, 226, 0.05) 1px,
-    transparent 1px,
-    transparent 26px
-  );
 }
 .process .wrap {
   padding: 0;
@@ -647,7 +605,6 @@ section {
 /* ---------- CONTACT ---------- */
 .contact-panel {
   background: var(--card);
-  border: 1.5px solid var(--line);
   border-radius: 36px;
   padding: 56px;
   display: grid;
@@ -677,11 +634,10 @@ section {
   padding: 14px 16px;
   background: var(--cream);
   border-radius: 16px;
-  border: 1.5px solid var(--line);
-  transition: border-color 0.2s, transform 0.2s;
+  transition: transform 0.2s, background 0.2s;
 }
 .contact-item:hover {
-  border-color: var(--orange);
+  background: #efe4fb;
   transform: translateX(4px);
 }
 .contact-item .ico {

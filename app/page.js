@@ -222,11 +222,6 @@ export default function Home() {
 
           <div className="hero-art">
             <div className="mascot-glow" />
-            <div className="float-badge">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5z" fill="var(--ink)" />
-              </svg>
-            </div>
             <div className="mascot-wrap">
               <img src="/mascot.png" alt="Mind2Matter mascot" className="mascot-img" />
             </div>
