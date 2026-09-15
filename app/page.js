@@ -121,7 +121,7 @@ function handleSwatchClick(e, sw) {
 }
 
 function LogoMark() {
-  return <img src="/logo.png" alt="Mind2Matter" className="logo-img" />;
+  return <img src="/m2mlogonew.png" alt="Mind2Matter" className="logo-img" />;
 }
 
 // Generates a smooth scalloped "cookie" blob path (Material-You-style shape):
